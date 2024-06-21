@@ -6,7 +6,7 @@ use serde::{Deserialize, Serialize};
 use surrealdb::sql::Thing;
 
 use db::{Countable, Named, DB};
-use tracing::info;
+use tracing::{debug, info};
 
 mod db;
 
@@ -44,14 +44,18 @@ async fn main() -> Result<()> {
     // Init DB
     let db = db::init().await?;
 
-    // Create some test users
-    for i in 1..=100 {
-        let _created: Vec<Record> = db
-            .create(User::name())
-            .content(User {
-                email: format!("test_{}@example.com", i),
-            })
-            .await?;
+    // Create some test users if they don't exist
+    if User::count(&db).await? == 0 {
+        debug!("Creating 100 test users");
+
+        for i in 1..=100 {
+            let _created: Vec<Record> = db
+                .create(User::name())
+                .content(User {
+                    email: format!("test_{}@example.com", i),
+                })
+                .await?;
+        }
     }
 
     // Setup our server
