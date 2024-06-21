@@ -77,17 +77,17 @@
     },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1716977621,
-        "owner": "cachix",
-        "repo": "devenv-nixpkgs",
-        "rev": "4267e705586473d3e5c8d50299e71503f16a6fb6",
-        "treeHash": "6d9f1f7ca0faf1bc2eeb397c78a49623260d3412",
+        "lastModified": 1718870667,
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "9b10b8f00cb5494795e5f51b39210fed4d2b0748",
+        "treeHash": "30806aad9a18f6476e7f0fe2efc8642b998ac08d",
         "type": "github"
       },
       "original": {
-        "owner": "cachix",
-        "ref": "rolling",
-        "repo": "devenv-nixpkgs",
+        "owner": "NixOS",
+        "ref": "nixpkgs-unstable",
+        "repo": "nixpkgs",
         "type": "github"
       }
     },
@@ -103,6 +103,22 @@
       "original": {
         "owner": "NixOS",
         "ref": "nixos-23.11",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "nixpkgs-surrealist-pr": {
+      "locked": {
+        "lastModified": 1718284348,
+        "owner": "MDM23",
+        "repo": "nixpkgs",
+        "rev": "dcd747d9776be3b3ac8ded10ca93edbd1d6991df",
+        "treeHash": "ce2dbcdda5cf8582c4b74060386fc06b5f21c758",
+        "type": "github"
+      },
+      "original": {
+        "owner": "MDM23",
+        "ref": "update-surrealist",
         "repo": "nixpkgs",
         "type": "github"
       }
@@ -135,6 +151,7 @@
         "devenv": "devenv",
         "fenix": "fenix",
         "nixpkgs": "nixpkgs",
+        "nixpkgs-surrealist-pr": "nixpkgs-surrealist-pr",
         "pre-commit-hooks": "pre-commit-hooks"
       }
     },
