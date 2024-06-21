@@ -1,10 +1,11 @@
 use std::fmt::Debug;
 
-use anyhow::Result;
 use serde::Deserialize;
 use surrealdb::engine::remote::http::{Client, Http};
 use surrealdb::Surreal;
 use tracing::debug;
+
+use crate::error::Result;
 
 #[derive(Deserialize)]
 pub struct Count {
