@@ -11,9 +11,12 @@ use crate::error::Result;
 
 mod db;
 mod error;
+mod views;
 
-#[derive(Debug, Serialize)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 struct User {
+    id: Option<Thing>,
+    name: String,
     email: String,
 }
 
@@ -30,50 +33,44 @@ struct Record {
     id: Thing,
 }
 
-fn layout(m: Markup) -> Markup {
-    html! {
-        (maud::DOCTYPE)
-        head {
-            meta charset="utf-8";
-            meta name="viewport" content="width=device-width, initial-scale=1";
-            meta name="color-scheme" content="light dark";
-
-            link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.classless.min.css";
-        }
-
-        body {
-            header {
-                nav {
-                    ul {
-                        li {
-                            strong { "Iris Admin" }
-                        }
-                    }
-                    ul {
-                        li {
-                            a href="#" { "Home" }
-                        }
-                        li {
-                            a href="#" { "Users" }
-                        }
-                    }
-                }
-            }
-            main {
-                (m)
-            }
-        }
-    }
-}
-
-async fn count_users(State(db): State<Arc<DB>>) -> Result<Markup> {
+async fn home(State(db): State<Arc<DB>>) -> Result<Markup> {
     let count: usize = User::count(&db).await?;
 
     let response = html! {
-        p { "There are " (count) " users!" }
+        article {
+            header {
+                strong {
+                    "Users"
+                }
+            }
+            (count) " registered users "
+            a href="/users" { "View Users" }
+        }
     };
 
-    Ok(layout(response))
+    Ok(views::layout(response))
+}
+
+async fn users(State(db): State<Arc<DB>>) -> Result<Markup> {
+    let users: Vec<User> = db.select(User::name()).await?;
+
+    let response = html! {
+        h1 { "Users" }
+
+        @for user in &users {
+            article {
+                header { strong { (user.name) } }
+                dl {
+                    dt { "ID" }
+                    dd { (user.id.clone().unwrap().id) }
+                    dt { "Email" }
+                    dd { (user.email) }
+                }
+            }
+        }
+    };
+
+    Ok(views::layout(response))
 }
 
 #[tokio::main]
@@ -92,6 +89,8 @@ async fn main() -> Result<()> {
             let _created: Vec<Record> = db
                 .create(User::name())
                 .content(User {
+                    id: None,
+                    name: format!("Test Person {}", i),
                     email: format!("test_{}@example.com", i),
                 })
                 .await?;
@@ -100,7 +99,8 @@ async fn main() -> Result<()> {
 
     // Setup our server
     let app = Router::new()
-        .route("/", get(count_users))
+        .route("/", get(home))
+        .route("/users", get(users))
         .with_state(Arc::new(db));
 
     // Run our app with Hyper
