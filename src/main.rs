@@ -42,6 +42,23 @@ fn layout(m: Markup) -> Markup {
         }
 
         body {
+            header {
+                nav {
+                    ul {
+                        li {
+                            strong { "Iris Admin" }
+                        }
+                    }
+                    ul {
+                        li {
+                            a href="#" { "Home" }
+                        }
+                        li {
+                            a href="#" { "Users" }
+                        }
+                    }
+                }
+            }
             main {
                 (m)
             }
