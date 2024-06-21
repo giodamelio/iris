@@ -2,7 +2,7 @@ use std::fmt::Debug;
 
 use anyhow::{Context, Result};
 use serde::Deserialize;
-use surrealdb::engine::local::{Db, Mem};
+use surrealdb::engine::remote::http::{Client, Http};
 use surrealdb::Surreal;
 
 #[derive(Deserialize)]
@@ -34,10 +34,10 @@ pub trait Countable: Named {
     }
 }
 
-pub type DB = Surreal<Db>;
+pub type DB = Surreal<Client>;
 
 pub async fn init() -> Result<DB> {
-    let db = Surreal::new::<Mem>(()).await?;
+    let db = Surreal::new::<Http>("localhost:8000").await?;
     db.use_ns("test").use_db("test").await?;
     Ok(db)
 }
