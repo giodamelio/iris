@@ -35,10 +35,14 @@ fn layout(m: Markup) -> Markup {
         (maud::DOCTYPE)
         head {
             meta charset="utf-8";
+
+            link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.classless.min.css";
         }
 
         body {
-            (m)
+            main {
+                (m)
+            }
         }
     }
 }
