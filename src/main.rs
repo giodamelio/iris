@@ -1,18 +1,16 @@
 use std::sync::Arc;
 
 use axum::{extract::State, routing::get, Router};
-use maud::html;
+use maud::{html, Markup};
 use serde::{Deserialize, Serialize};
 use surrealdb::sql::Thing;
 use tracing::{debug, info};
 
 use crate::db::{Countable, Named, DB};
 use crate::error::Result;
-use crate::template::Template;
 
 mod db;
 mod error;
-mod template;
 
 #[derive(Debug, Serialize)]
 struct User {
@@ -32,14 +30,14 @@ struct Record {
     id: Thing,
 }
 
-async fn count_users(State(db): State<Arc<DB>>) -> Result<Template> {
+async fn count_users(State(db): State<Arc<DB>>) -> Result<Markup> {
     let count: usize = User::count(&db).await?;
 
     let response = html! {
         p { "There are " (count) " users!" }
     };
 
-    Ok(response.into())
+    Ok(response)
 }
 
 #[tokio::main]

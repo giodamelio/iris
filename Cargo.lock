@@ -1710,6 +1710,8 @@ version = "0.26.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "df518b75016b4289cdddffa1b01f2122f4a49802c93191f3133f6dc2472ebcaa"
 dependencies = [
+ "axum-core",
+ "http 1.1.0",
  "itoa",
  "maud_macros",
 ]
