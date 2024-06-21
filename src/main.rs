@@ -30,6 +30,19 @@ struct Record {
     id: Thing,
 }
 
+fn layout(m: Markup) -> Markup {
+    html! {
+        (maud::DOCTYPE)
+        head {
+            meta charset="utf-8";
+        }
+
+        body {
+            (m)
+        }
+    }
+}
+
 async fn count_users(State(db): State<Arc<DB>>) -> Result<Markup> {
     let count: usize = User::count(&db).await?;
 
@@ -37,7 +50,7 @@ async fn count_users(State(db): State<Arc<DB>>) -> Result<Markup> {
         p { "There are " (count) " users!" }
     };
 
-    Ok(response)
+    Ok(layout(response))
 }
 
 #[tokio::main]
