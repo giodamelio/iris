@@ -6,6 +6,7 @@ use serde::{Deserialize, Serialize};
 use surrealdb::sql::Thing;
 
 use db::{Countable, Named, DB};
+use tracing::info;
 
 mod db;
 
@@ -37,6 +38,9 @@ async fn count_users(State(db): State<Arc<DB>>) -> std::result::Result<String, S
 
 #[tokio::main]
 async fn main() -> Result<()> {
+    // Setup Logging
+    tracing_subscriber::fmt::init();
+
     // Init DB
     let db = db::init().await?;
 
@@ -56,6 +60,7 @@ async fn main() -> Result<()> {
         .with_state(Arc::new(db));
 
     // Run our app with Hyper
+    info!("Starting server on http://127.0.0.1:3000");
     let listener = tokio::net::TcpListener::bind("127.0.0.1:3000").await?;
     axum::serve(listener, app).await?;
 

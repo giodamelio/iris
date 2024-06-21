@@ -4,6 +4,7 @@ use anyhow::{Context, Result};
 use serde::Deserialize;
 use surrealdb::engine::remote::http::{Client, Http};
 use surrealdb::Surreal;
+use tracing::debug;
 
 #[derive(Deserialize)]
 pub struct Count {
@@ -37,6 +38,7 @@ pub trait Countable: Named {
 pub type DB = Surreal<Client>;
 
 pub async fn init() -> Result<DB> {
+    debug!("Connecting to DB");
     let db = Surreal::new::<Http>("localhost:8000").await?;
     db.use_ns("test").use_db("test").await?;
     Ok(db)

@@ -11,3 +11,5 @@ axum = { version = "0.7.5", features = ["macros"] }
 serde = { version = "1.0.203", features = ["derive"] }
 surrealdb = { version = "1.5.3", features = ["kv-mem", "protocol-http"] }
 tokio = { version = "1.38.0", features = ["full"] }
+tracing = "0.1.40"
+tracing-subscriber = "0.3.18"
