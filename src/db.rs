@@ -1,5 +1,6 @@
 use std::fmt::Debug;
 
+use anyhow::{Context, Result};
 use serde::Deserialize;
 use surrealdb::engine::local::{Db, Mem};
 use surrealdb::Surreal;
@@ -21,20 +22,21 @@ pub trait Named {
 }
 
 pub trait Countable: Named {
-    async fn count(db: &DB) -> surrealdb::Result<usize> {
-        let count: Option<Count> = db
+    async fn count(db: &DB) -> Result<usize> {
+        let count: Count = db
             .query("SELECT count() FROM type::table($table) GROUP BY count")
             .bind(("table", Self::name()))
             .await?
-            .take(0)?;
+            .take::<Option<Count>>(0)?
+            .context("Cannot get count")?;
 
-        Ok(count.expect("Cannot count!").count)
+        Ok(count.count)
     }
 }
 
 pub type DB = Surreal<Db>;
 
-pub async fn init() -> surrealdb::Result<DB> {
+pub async fn init() -> Result<DB> {
     let db = Surreal::new::<Mem>(()).await?;
     db.use_ns("test").use_db("test").await?;
     Ok(db)

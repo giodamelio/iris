@@ -1,3 +1,4 @@
+use anyhow::Result;
 use serde::{Deserialize, Serialize};
 use surrealdb::sql::Thing;
 
@@ -24,7 +25,7 @@ struct Record {
 }
 
 #[tokio::main]
-async fn main() -> surrealdb::Result<()> {
+async fn main() -> Result<()> {
     // Init DB
     let db = db::init().await?;
 
