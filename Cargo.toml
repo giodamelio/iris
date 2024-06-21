@@ -8,6 +8,7 @@ edition = "2021"
 [dependencies]
 anyhow = "1.0.86"
 axum = { version = "0.7.5", features = ["macros"] }
+maud = "0.26.0"
 serde = { version = "1.0.203", features = ["derive"] }
 surrealdb = { version = "1.5.3", features = ["kv-mem", "protocol-http"] }
 tokio = { version = "1.38.0", features = ["full"] }
