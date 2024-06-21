@@ -1,4 +1,5 @@
 use anyhow::Result;
+use axum::{routing::get, Router};
 use serde::{Deserialize, Serialize};
 use surrealdb::sql::Thing;
 
@@ -42,6 +43,13 @@ async fn main() -> Result<()> {
     // Count how many users there are
     let count: usize = User::count(&db).await?;
     println!("There are {:#?} users", count);
+
+    // Setup our server
+    let app = Router::new().route("/", get(|| async { "Hello, World!" }));
+
+    // Run our app with Hyper
+    let listener = tokio::net::TcpListener::bind("127.0.0.1:3000").await?;
+    axum::serve(listener, app).await?;
 
     Ok(())
 }
