@@ -60,11 +60,15 @@ async fn users(State(db): State<Arc<DB>>) -> Result<Markup> {
         @for user in &users {
             article {
                 header { strong { (user.name) } }
-                dl {
-                    dt { "ID" }
-                    dd { (user.id.clone().unwrap().id) }
-                    dt { "Email" }
-                    dd { (user.email) }
+                ul {
+                    li {
+                        strong { "ID: " }
+                        (user.id.clone().unwrap().id)
+                    }
+                    li {
+                        strong { "Email: " }
+                        (user.email)
+                    }
                 }
             }
         }
