@@ -1,6 +1,12 @@
 use std::sync::Arc;
 
-use axum::{extract::State, routing::get, Router};
+use anyhow::anyhow;
+use axum::{
+    extract::{Path, State},
+    http::StatusCode,
+    routing::get,
+    Router,
+};
 use maud::{html, Markup};
 use serde::{Deserialize, Serialize};
 use surrealdb::sql::Thing;
@@ -51,27 +57,47 @@ async fn home(State(db): State<Arc<DB>>) -> Result<Markup> {
     Ok(views::layout(response))
 }
 
-async fn users(State(db): State<Arc<DB>>) -> Result<Markup> {
+fn user_card(user: &User) -> Markup {
+    html! {
+        article {
+            header { strong { (user.name) } }
+            ul {
+                li {
+                    strong { "ID: " }
+                    (user.id.clone().unwrap().id)
+                }
+                li {
+                    strong { "Email: " }
+                    (user.email)
+                }
+            }
+        }
+    }
+}
+
+async fn users_index(State(db): State<Arc<DB>>) -> Result<Markup> {
     let users: Vec<User> = db.select(User::name()).await?;
 
     let response = html! {
         h1 { "Users" }
 
         @for user in &users {
-            article {
-                header { strong { (user.name) } }
-                ul {
-                    li {
-                        strong { "ID: " }
-                        (user.id.clone().unwrap().id)
-                    }
-                    li {
-                        strong { "Email: " }
-                        (user.email)
-                    }
-                }
-            }
+            (user_card(&user))
         }
+    };
+
+    Ok(views::layout(response))
+}
+
+async fn users_show(State(db): State<Arc<DB>>, Path(id): Path<String>) -> Result<Markup> {
+    info!("ID: {}", id);
+
+    let _user: Option<User> = db.select((User::name(), id)).await?;
+
+    // (user_card(&user))
+
+    let response = html! {
+        h1 { "Users" }
     };
 
     Ok(views::layout(response))
@@ -104,7 +130,8 @@ async fn main() -> Result<()> {
     // Setup our server
     let app = Router::new()
         .route("/", get(home))
-        .route("/users", get(users))
+        .route("/users", get(users_index))
+        .route("/users/:id", get(users_show))
         .with_state(Arc::new(db));
 
     // Run our app with Hyper
