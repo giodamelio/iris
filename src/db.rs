@@ -1,7 +1,10 @@
 use std::fmt::Debug;
+use std::sync::Arc;
 
+use serde::de::DeserializeOwned;
 use serde::Deserialize;
 use surrealdb::engine::remote::http::{Client, Http};
+use surrealdb::sql::Id;
 use surrealdb::Surreal;
 use tracing::debug;
 
@@ -44,4 +47,13 @@ pub async fn init() -> Result<DB> {
     let db = Surreal::new::<Http>("localhost:8000").await?;
     db.use_ns("test").use_db("test").await?;
     Ok(db)
+}
+
+pub async fn find_by_id<T, I>(db: Arc<DB>, id: I) -> Result<Option<T>>
+where
+    T: Named + DeserializeOwned,
+    I: Into<Id>,
+{
+    let user: Option<T> = db.select((T::name(), id)).await?;
+    Ok(user)
 }

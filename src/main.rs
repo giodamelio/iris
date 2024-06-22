@@ -12,7 +12,7 @@ use serde::{Deserialize, Serialize};
 use surrealdb::sql::Thing;
 use tracing::{debug, info};
 
-use crate::db::{Countable, Named, DB};
+use crate::db::{find_by_id, Countable, Named, DB};
 use crate::error::Result;
 
 mod db;
@@ -92,7 +92,8 @@ async fn users_index(State(db): State<Arc<DB>>) -> Result<Markup> {
 async fn users_show(State(db): State<Arc<DB>>, Path(id): Path<String>) -> Result<Markup> {
     info!("ID: {}", id);
 
-    let _user: Option<User> = db.select((User::name(), id)).await?;
+    let user: Option<User> = find_by_id(db, id).await?;
+    info!("User: {:#?}", user);
 
     // (user_card(&user))
 
