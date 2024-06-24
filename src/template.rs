@@ -1,4 +1,4 @@
-use poem::IntoResponse;
+use poem::{web::Html, IntoResponse};
 
 pub struct Template(maud::Markup);
 
@@ -10,6 +10,7 @@ impl From<maud::Markup> for Template {
 
 impl IntoResponse for Template {
     fn into_response(self) -> poem::Response {
-        self.0.into_string().into()
+        let res: Html<String> = Html::default();
+        res.with_body(self.0.into_string()).into_response()
     }
 }
