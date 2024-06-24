@@ -131,8 +131,6 @@ async fn users_index(Data(db): Data<&DB>) -> Result<Template> {
 
 #[handler]
 async fn users_show(ExtractById(user): ExtractById<User>) -> Result<Template> {
-    info!("Extracted User: {:#?}", user);
-
     let response = html! {
         h1 { "Users" }
         (user_card(&user))
