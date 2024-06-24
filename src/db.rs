@@ -1,14 +1,12 @@
 use std::fmt::Debug;
-use std::sync::Arc;
 
+use anyhow::Result;
 use serde::de::DeserializeOwned;
 use serde::Deserialize;
 use surrealdb::engine::remote::http::{Client, Http};
 use surrealdb::sql::Id;
 use surrealdb::Surreal;
 use tracing::debug;
-
-use crate::error::Result;
 
 #[derive(Deserialize)]
 pub struct Count {
@@ -49,7 +47,7 @@ pub async fn init() -> Result<DB> {
     Ok(db)
 }
 
-pub async fn find_by_id<T, I>(db: Arc<DB>, id: I) -> Result<Option<T>>
+pub async fn find_by_id<T, I>(db: &DB, id: I) -> Result<Option<T>>
 where
     T: Named + DeserializeOwned,
     I: Into<Id>,
