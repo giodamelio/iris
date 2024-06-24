@@ -1,16 +1,16 @@
-use std::sync::Arc;
+use std::{collections::HashMap, fmt::Debug, sync::Arc};
 
-use anyhow::anyhow;
 use axum::{
-    extract::{Path, State},
-    http::StatusCode,
+    async_trait,
+    extract::{FromRequestParts, Path, State},
+    http::{request::Parts, StatusCode},
     routing::get,
     Router,
 };
 use maud::{html, Markup};
-use serde::{Deserialize, Serialize};
+use serde::{de::DeserializeOwned, Deserialize, Serialize};
 use surrealdb::sql::Thing;
-use tracing::{debug, info};
+use tracing::{debug, info, trace};
 
 use crate::db::{find_by_id, Countable, Named, DB};
 use crate::error::Result;
@@ -30,6 +30,52 @@ impl db::Countable for User {}
 impl db::Named for User {
     fn name() -> &'static str {
         "user"
+    }
+}
+
+struct ExtractById<T>(T);
+
+#[async_trait]
+impl<T> FromRequestParts<Arc<DB>> for ExtractById<T>
+where
+    T: db::Named + DeserializeOwned + Debug,
+{
+    type Rejection = (StatusCode, String);
+
+    async fn from_request_parts(
+        parts: &mut Parts,
+        state: &Arc<DB>,
+    ) -> std::result::Result<Self, Self::Rejection> {
+        let param_name = format!("{}_id", T::name());
+
+        // Get a hashmap of all the path params
+        let Path(params): Path<HashMap<String, String>> =
+            Path::from_request_parts(parts, state).await.map_err(|e| {
+                trace!("Path param error: {:?}", e);
+                (StatusCode::INTERNAL_SERVER_ERROR, "Invalid ID".to_string())
+            })?;
+
+        // Get our specifc param
+        let id = params
+            .get(&param_name)
+            .ok_or((StatusCode::INTERNAL_SERVER_ERROR, "Invalid ID".to_string()))?;
+
+        // Query the database
+        let not_found_error = (StatusCode::NOT_FOUND, format!("{} not found", T::name()));
+        let thing: T = find_by_id(state.clone(), id)
+            .await
+            .map_err(|e| {
+                trace!(
+                    "Cannot find {} with id of {}. Error: {:?}",
+                    T::name(),
+                    id,
+                    e
+                );
+                not_found_error.clone()
+            })?
+            .ok_or(not_found_error)?;
+
+        Ok(ExtractById(thing))
     }
 }
 
@@ -89,16 +135,12 @@ async fn users_index(State(db): State<Arc<DB>>) -> Result<Markup> {
     Ok(views::layout(response))
 }
 
-async fn users_show(State(db): State<Arc<DB>>, Path(id): Path<String>) -> Result<Markup> {
-    info!("ID: {}", id);
-
-    let user: Option<User> = find_by_id(db, id).await?;
-    info!("User: {:#?}", user);
-
-    // (user_card(&user))
+async fn users_show(ExtractById(user): ExtractById<User>) -> Result<Markup> {
+    info!("Extracted User: {:#?}", user);
 
     let response = html! {
         h1 { "Users" }
+        (user_card(&user))
     };
 
     Ok(views::layout(response))
@@ -132,7 +174,7 @@ async fn main() -> Result<()> {
     let app = Router::new()
         .route("/", get(home))
         .route("/users", get(users_index))
-        .route("/users/:id", get(users_show))
+        .route("/users/:user_id", get(users_show))
         .with_state(Arc::new(db));
 
     // Run our app with Hyper
