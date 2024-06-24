@@ -20,7 +20,13 @@ mod views;
 fn user_card(user: &User) -> Markup {
     html! {
         article {
-            header { strong { (user.name) } }
+            header {
+                a href=(format!("/users/{}", user.clone().id.unwrap().id)) {
+                    strong {
+                        (user.name)
+                    }
+                }
+            }
             ul {
                 li {
                     strong { "ID: " }
