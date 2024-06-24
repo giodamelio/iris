@@ -3,8 +3,7 @@ use std::fmt::Debug;
 use anyhow::Result;
 use maud::{html, Markup};
 use poem::{
-    get, handler, listener::TcpListener, middleware::AddData, web::Data, EndpointExt, IntoResponse,
-    Route, Server,
+    get, handler, listener::TcpListener, middleware::AddData, web::Data, EndpointExt, Route, Server,
 };
 use serde::Deserialize;
 use surrealdb::sql::Thing;
@@ -13,10 +12,12 @@ use tracing::{debug, info};
 use crate::db::{Countable, Named, DB};
 use crate::extractors::ExtractById;
 use crate::models::User;
+use crate::template::Template;
 
 mod db;
 mod extractors;
 mod models;
+mod template;
 mod views;
 
 #[derive(Debug, Deserialize)]
@@ -125,18 +126,4 @@ async fn users_show(ExtractById(user): ExtractById<User>) -> Result<Template> {
     };
 
     Ok(views::layout(response).into())
-}
-
-struct Template(maud::Markup);
-
-impl From<maud::Markup> for Template {
-    fn from(value: maud::Markup) -> Self {
-        Template(value)
-    }
-}
-
-impl IntoResponse for Template {
-    fn into_response(self) -> poem::Response {
-        self.0.into_string().into()
-    }
 }
