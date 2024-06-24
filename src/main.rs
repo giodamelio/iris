@@ -2,6 +2,7 @@ use std::fmt::Debug;
 
 use anyhow::Result;
 use maud::{html, Markup};
+use models::Group;
 use poem::{
     get, handler, listener::TcpListener, middleware::AddData, web::Data, EndpointExt, Route, Server,
 };
@@ -55,6 +56,15 @@ async fn main() -> anyhow::Result<()> {
     // Create some test users if they don't exist
     if User::count(&db).await? == 0 {
         debug!("Creating 100 test users");
+
+        // Create a test Group
+        let _new_group: Vec<Record> = db
+            .create(Group::name())
+            .content(Group {
+                id: None,
+                name: "Test Group".to_string(),
+            })
+            .await?;
 
         for i in 1..=100 {
             let _created: Vec<Record> = db
