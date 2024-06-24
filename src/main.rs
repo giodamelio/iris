@@ -6,30 +6,18 @@ use poem::{
     get, handler, listener::TcpListener, middleware::AddData, web::Data, EndpointExt, IntoResponse,
     Route, Server,
 };
-use serde::{Deserialize, Serialize};
+use serde::Deserialize;
 use surrealdb::sql::Thing;
 use tracing::{debug, info};
 
 use crate::db::{Countable, Named, DB};
 use crate::extractors::ExtractById;
+use crate::models::User;
 
 mod db;
 mod extractors;
+mod models;
 mod views;
-
-#[derive(Debug, Clone, Serialize, Deserialize)]
-struct User {
-    id: Option<Thing>,
-    name: String,
-    email: String,
-}
-
-impl db::Countable for User {}
-impl db::Named for User {
-    fn name() -> &'static str {
-        "user"
-    }
-}
 
 #[derive(Debug, Deserialize)]
 struct Record {
