@@ -1,13 +1,9 @@
-use std::fmt::Debug;
-
 use anyhow::Result;
 use maud::{html, Markup};
 use models::Group;
 use poem::{
     get, handler, listener::TcpListener, middleware::AddData, web::Data, EndpointExt, Route, Server,
 };
-use serde::Deserialize;
-use surrealdb::sql::Thing;
 use tracing::{debug, info};
 
 use crate::db::{Countable, Named, DB};
@@ -20,12 +16,6 @@ mod extractors;
 mod models;
 mod template;
 mod views;
-
-#[derive(Debug, Deserialize)]
-struct Record {
-    #[allow(dead_code)]
-    id: Thing,
-}
 
 fn user_card(user: &User) -> Markup {
     html! {
@@ -54,11 +44,11 @@ async fn main() -> anyhow::Result<()> {
     let db = db::init().await?;
 
     // Create some test users if they don't exist
-    if User::count(&db).await? == 0 {
+    if true {
         debug!("Creating 100 test users");
 
         // Create a test Group
-        let _new_group: Vec<Record> = db
+        let new_group: Vec<Group> = db
             .create(Group::name())
             .content(Group {
                 id: None,
@@ -67,13 +57,20 @@ async fn main() -> anyhow::Result<()> {
             .await?;
 
         for i in 1..=100 {
-            let _created: Vec<Record> = db
+            let new_user: Vec<User> = db
                 .create(User::name())
                 .content(User {
                     id: None,
                     name: format!("Test Person {}", i),
                     email: format!("test_{}@example.com", i),
                 })
+                .await?;
+
+            // Make the user a member of the test group
+            let _relate_response = db
+                .query("RELATE $user->member->$group")
+                .bind(("user", new_user[0].id.clone()))
+                .bind(("group", new_group[0].id.clone()))
                 .await?;
         }
     }

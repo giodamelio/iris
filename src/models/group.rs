@@ -1,11 +1,11 @@
 use serde::{Deserialize, Serialize};
-use surrealdb::sql::Thing;
+use surrealdb::opt::RecordId;
 
 use crate::db::{Countable, Named};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Group {
-    pub id: Option<Thing>,
+    pub id: Option<RecordId>,
     pub name: String,
 }
 
