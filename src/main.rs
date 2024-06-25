@@ -130,10 +130,19 @@ async fn users_index(Data(db): Data<&DB>) -> Result<Template> {
 }
 
 #[handler]
-async fn users_show(ExtractById(user): ExtractById<User>) -> Result<Template> {
+async fn users_show(Data(db): Data<&DB>, ExtractById(user): ExtractById<User>) -> Result<Template> {
+    let groups = user.groups(db).await?;
+
     let response = html! {
-        h1 { "Users" }
+        h1 { "User" }
         (user_card(&user))
+
+        h2 { "Member Groups" }
+        ul {
+            @for group in &groups {
+                li { (group.name) }
+            }
+        }
     };
 
     Ok(views::layout(response).into())
