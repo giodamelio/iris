@@ -107,7 +107,16 @@ async fn index(Data(db): Data<&DB>) -> Result<Template> {
                 }
             }
             (count) " registered users "
-            a href="/users" { "View Users" }
+            a href="/users" { "View" }
+        }
+        article {
+            header {
+                strong {
+                    "Groups"
+                }
+            }
+            (count) " groups "
+            a href="/groups" { "View" }
         }
     };
 
@@ -137,10 +146,12 @@ async fn users_show(Data(db): Data<&DB>, ExtractById(user): ExtractById<User>) -
         h1 { "User" }
         (user_card(&user))
 
-        h2 { "Member Groups" }
-        ul {
-            @for group in &groups {
-                li { (group.name) }
+        article {
+            h2 { "Member Groups" }
+            ul {
+                @for group in &groups {
+                    li { (group.name) }
+                }
             }
         }
     };

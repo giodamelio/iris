@@ -27,6 +27,9 @@ pub fn layout(m: Markup) -> Markup {
                         li {
                             a href="/users" { "Users" }
                         }
+                        li {
+                            a href="/groups" { "Groups" }
+                        }
                     }
                 }
             }
