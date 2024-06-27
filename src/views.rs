@@ -22,13 +22,13 @@ pub fn layout(m: Markup) -> Markup {
                     }
                     ul {
                         li {
-                            a href="/" { "Home" }
+                            a href="/admin" { "Home" }
                         }
                         li {
-                            a href="/users" { "Users" }
+                            a href="/admin/users" { "Users" }
                         }
                         li {
-                            a href="/groups" { "Groups" }
+                            a href="/admin/groups" { "Groups" }
                         }
                     }
                 }

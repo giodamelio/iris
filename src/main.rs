@@ -21,7 +21,7 @@ fn user_card(user: &User) -> Markup {
     html! {
         article {
             header {
-                a href=(format!("/users/{}", user.clone().id.unwrap().id)) {
+                a href=(format!("/admin/users/{}", user.clone().id.unwrap().id)) {
                     strong {
                         (user.name)
                     }
@@ -45,7 +45,7 @@ fn group_card(group: &Group) -> Markup {
     html! {
         article {
             header {
-                a href=(format!("/groups/{}", group.clone().id.unwrap().id)) {
+                a href=(format!("/admin/groups/{}", group.clone().id.unwrap().id)) {
                     strong {
                         (group.name)
                     }
@@ -105,15 +105,20 @@ async fn main() -> anyhow::Result<()> {
         }
     }
 
-    // Run our app
-    info!("Starting server on http://127.0.0.1:3000");
-    let app = Route::new()
+    // Build our routing table
+    let admin_router = Route::new()
         .at("/", get(index))
         .at("/users", get(users_index))
         .at("/users/:user_id", get(users_show))
         .at("/groups", get(groups_index))
-        .at("/groups/:group_id", get(groups_show))
+        .at("/groups/:group_id", get(groups_show));
+
+    let app = Route::new()
+        .nest("/admin", admin_router)
         .with(AddData::new(db));
+
+    // Run our app
+    info!("Starting server on http://127.0.0.1:3000");
     Server::new(TcpListener::bind("127.0.0.1:3000"))
         .run(app)
         .await?;
@@ -134,7 +139,7 @@ async fn index(Data(db): Data<&DB>) -> Result<Template> {
                 }
             }
             (users_count) " registered users "
-            a href="/users" { "View" }
+            a href="/admin/users" { "View" }
         }
         article {
             header {
@@ -143,7 +148,7 @@ async fn index(Data(db): Data<&DB>) -> Result<Template> {
                 }
             }
             (groups_count) " groups "
-            a href="/groups" { "View" }
+            a href="/admin/groups" { "View" }
         }
     };
 
