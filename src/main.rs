@@ -41,6 +41,26 @@ fn user_card(user: &User) -> Markup {
     }
 }
 
+fn group_card(group: &Group) -> Markup {
+    html! {
+        article {
+            header {
+                a href=(format!("/groups/{}", group.clone().id.unwrap().id)) {
+                    strong {
+                        (group.name)
+                    }
+                }
+            }
+            ul {
+                li {
+                    strong { "ID: " }
+                    (group.id.clone().unwrap().id)
+                }
+            }
+        }
+    }
+}
+
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
     // Setup Logging
@@ -87,6 +107,8 @@ async fn main() -> anyhow::Result<()> {
         .at("/", get(index))
         .at("/users", get(users_index))
         .at("/users/:user_id", get(users_show))
+        .at("/groups", get(groups_index))
+        .at("/groups/:group_id", get(groups_show))
         .with(AddData::new(db));
     Server::new(TcpListener::bind("127.0.0.1:3000"))
         .run(app)
@@ -154,6 +176,31 @@ async fn users_show(Data(db): Data<&DB>, ExtractById(user): ExtractById<User>) -
                 }
             }
         }
+    };
+
+    Ok(views::layout(response).into())
+}
+
+#[handler]
+async fn groups_index(Data(db): Data<&DB>) -> Result<Template> {
+    let groups: Vec<Group> = db.select(Group::name()).await?;
+
+    let response = html! {
+        h1 { "Groups" }
+
+        @for group in &groups {
+            (group_card(&group))
+        }
+    };
+
+    Ok(views::layout(response).into())
+}
+
+#[handler]
+async fn groups_show(ExtractById(group): ExtractById<Group>) -> Result<Template> {
+    let response = html! {
+        h1 { "Group" }
+        (group_card(&group))
     };
 
     Ok(views::layout(response).into())
