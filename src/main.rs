@@ -123,7 +123,8 @@ async fn main() -> anyhow::Result<()> {
 
 #[handler]
 async fn index(Data(db): Data<&DB>) -> Result<Template> {
-    let count: usize = User::count(db).await?;
+    let users_count: usize = User::count(db).await?;
+    let groups_count: usize = Group::count(db).await?;
 
     let response = html! {
         article {
@@ -132,7 +133,7 @@ async fn index(Data(db): Data<&DB>) -> Result<Template> {
                     "Users"
                 }
             }
-            (count) " registered users "
+            (users_count) " registered users "
             a href="/users" { "View" }
         }
         article {
@@ -141,7 +142,7 @@ async fn index(Data(db): Data<&DB>) -> Result<Template> {
                     "Groups"
                 }
             }
-            (count) " groups "
+            (groups_count) " groups "
             a href="/groups" { "View" }
         }
     };
