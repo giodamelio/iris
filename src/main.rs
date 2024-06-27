@@ -1,6 +1,6 @@
 use anyhow::Result;
 use maud::{html, Markup};
-use models::Group;
+use models::{AuditLog, Group};
 use poem::{
     get, handler, listener::TcpListener, middleware::AddData, web::Data, EndpointExt, Route, Server,
 };
@@ -76,8 +76,10 @@ async fn main() -> anyhow::Result<()> {
         // Delete existing data
         db.query("DELETE user").await?;
         db.query("DELETE group").await?;
+        db.query("DELETE audit_log").await?;
 
         // Create a test Group
+        AuditLog::log(&db, None, "Creating new test group").await?;
         let new_group: Vec<Group> = db
             .create(Group::name())
             .content(Group {
@@ -86,6 +88,7 @@ async fn main() -> anyhow::Result<()> {
             })
             .await?;
 
+        AuditLog::log(&db, None, "Creating 100 test users").await?;
         for i in 1..=100 {
             let new_user: Vec<User> = db
                 .create(User::name())
@@ -95,6 +98,8 @@ async fn main() -> anyhow::Result<()> {
                     email: format!("test_{}@example.com", i),
                 })
                 .await?;
+
+            AuditLog::log(&db, Some(new_user[0].clone()), "Created new user").await?;
 
             // Make the user a member of the test group
             let _relate_response = db

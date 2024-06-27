@@ -7,6 +7,7 @@ edition = "2021"
 
 [dependencies]
 anyhow = "1.0.86"
+chrono = "0.4.38"
 maud = { version = "0.26.0", features = [] }
 poem = { version = "3.0.1", features = ["anyhow"] }
 serde = { version = "1.0.203", features = ["derive"] }
