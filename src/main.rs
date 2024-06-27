@@ -71,7 +71,11 @@ async fn main() -> anyhow::Result<()> {
 
     // Create some test users if they don't exist
     if true {
-        debug!("Creating 100 test users");
+        debug!("Creating Test Data");
+
+        // Delete existing data
+        db.query("DELETE user").await?;
+        db.query("DELETE group").await?;
 
         // Create a test Group
         let new_group: Vec<Group> = db
