@@ -1,4 +1,14 @@
+use chrono::{DateTime, Utc};
 use maud::{html, Markup, DOCTYPE};
+
+pub fn datetime<D: Into<DateTime<Utc>>>(dt: D) -> Markup {
+    let dt_string = dt.into().to_rfc3339();
+    html! {
+        time datetime=(dt_string) title=(dt_string) {
+            (dt_string)
+        }
+    }
+}
 
 pub fn layout(m: Markup) -> Markup {
     html! {

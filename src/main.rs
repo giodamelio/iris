@@ -5,6 +5,7 @@ use poem::{
     get, handler, listener::TcpListener, middleware::AddData, web::Data, EndpointExt, Route, Server,
 };
 use tracing::{debug, info};
+use views::datetime;
 
 use crate::db::{Countable, Named, DB};
 use crate::extractors::ExtractById;
@@ -177,12 +178,9 @@ async fn audit_log_index(Data(db): Data<&DB>) -> Result<Template> {
             }
             tbody {
                 @for entry in &log_entries {
-                    @let datetime = entry.performed_at.to_rfc3339();
                     tr {
                         td {
-                            time datetime=(datetime) title=(datetime) {
-                                (datetime)
-                            }
+                            (datetime(entry.performed_at.clone()))
                         }
                         td { (entry.message) }
                     }
