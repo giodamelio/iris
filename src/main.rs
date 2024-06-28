@@ -24,7 +24,7 @@ fn user_card(user: &User) -> Markup {
     html! {
         article {
             header {
-                a href=(format!("/admin/users/{}", user.clone().id.unwrap().id)) {
+                a href=(user.link()) {
                     strong {
                         (user.name)
                     }
@@ -48,7 +48,7 @@ fn group_card(group: &Group) -> Markup {
     html! {
         article {
             header {
-                a href=(format!("/admin/groups/{}", group.clone().id.unwrap().id)) {
+                a href=(group.link()) {
                     strong {
                         (group.name)
                     }
@@ -202,7 +202,7 @@ async fn audit_log_index(Data(db): Data<&DB>) -> Result<Template> {
                         }
                         td {
                             @if let Some(performed_by) = &entry.performed_by {
-                                a href=(format!("/admin/users/{}", performed_by.clone().id.unwrap().id)) {
+                                a href=(performed_by.link()) {
                                     (performed_by.name)
                                 }
                             } @else {

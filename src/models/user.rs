@@ -22,6 +22,10 @@ impl User {
 
         Ok(response.take(0)?)
     }
+
+    pub fn link(&self) -> String {
+        format!("/admin/users/{}", self.id.clone().unwrap().id)
+    }
 }
 
 impl Countable for User {}
