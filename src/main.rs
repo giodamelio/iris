@@ -177,7 +177,6 @@ async fn audit_log_index(Data(db): Data<&DB>) -> Result<Template> {
             "
             SELECT performed_at, message, performed_by FROM audit_log
             ORDER BY performed_at DESC
-            LIMIT 50
             FETCH performed_by",
         )
         .await?;
