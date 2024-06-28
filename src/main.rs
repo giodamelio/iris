@@ -1,9 +1,11 @@
 use anyhow::Result;
 use maud::{html, Markup};
 use models::{AuditLog, Group};
+use poem::endpoint::EmbeddedFilesEndpoint;
 use poem::{
     get, handler, listener::TcpListener, middleware::AddData, web::Data, EndpointExt, Route, Server,
 };
+use rust_embed::Embed;
 use serde::Deserialize;
 use surrealdb::sql::Datetime;
 use tracing::{debug, info};
@@ -63,6 +65,10 @@ fn group_card(group: &Group) -> Markup {
         }
     }
 }
+
+#[derive(Embed)]
+#[folder = "static/"]
+struct Assets;
 
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
@@ -124,6 +130,7 @@ async fn main() -> anyhow::Result<()> {
 
     let app = Route::new()
         .nest("/admin", admin_router)
+        .nest("/static", EmbeddedFilesEndpoint::<Assets>::new())
         .with(AddData::new(db));
 
     // Run our app
