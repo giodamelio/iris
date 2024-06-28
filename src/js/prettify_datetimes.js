@@ -4,7 +4,8 @@ document.addEventListener("DOMContentLoaded", function(event) {
     if (
       element.nodeType === 1 &&
       element.tagName === 'TIME' &&
-      element.hasAttribute('datetime')
+      element.hasAttribute('datetime') &&
+      !element.hasAttribute('x-transformed')
     ) {
       const datetimeStr = element.getAttribute('datetime');
       const date = new Date(datetimeStr);
@@ -48,6 +49,9 @@ document.addEventListener("DOMContentLoaded", function(event) {
       // Set the full, localized date string as the title for detailed view
       // Undefined uses users local default
       element.title = date.toLocaleString(undefined, fullOptions); 
+
+      // Set attribute so it is not transformed again
+      element.setAttribute('x-transformed', '');
     }
   };
 
@@ -63,6 +67,11 @@ document.addEventListener("DOMContentLoaded", function(event) {
     }
   });
   observer.observe(document.body, config);
+
+  // Process any time elements added by htmx
+  document.addEventListener('htmx:afterSwap', function(_event) {
+    document.querySelectorAll('time').forEach(processTimeElement);
+  });
 
   // Process all existing <time> elements on the page
   document.querySelectorAll('time').forEach(processTimeElement);
