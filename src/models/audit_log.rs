@@ -11,6 +11,7 @@ use super::User;
 pub struct AuditLog {
     pub id: Option<RecordId>,
     pub performed_at: Datetime,
+    pub performed_by: Option<RecordId>,
     pub message: String,
 }
 
@@ -25,6 +26,7 @@ impl AuditLog {
             .content(AuditLog {
                 id: None,
                 performed_at: Utc::now().into(),
+                performed_by: user.clone().and_then(|u| u.id),
                 message: message.into(),
             })
             .await?;
