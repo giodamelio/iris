@@ -4,6 +4,8 @@ use models::{AuditLog, Group};
 use poem::{
     get, handler, listener::TcpListener, middleware::AddData, web::Data, EndpointExt, Route, Server,
 };
+use serde::Deserialize;
+use surrealdb::sql::Datetime;
 use tracing::{debug, info};
 use views::datetime;
 
@@ -164,7 +166,22 @@ async fn index(Data(db): Data<&DB>) -> Result<Template> {
 
 #[handler]
 async fn audit_log_index(Data(db): Data<&DB>) -> Result<Template> {
-    let log_entries: Vec<AuditLog> = db.select(AuditLog::name()).await?;
+    #[derive(Deserialize)]
+    struct LogEntry {
+        performed_at: Datetime,
+        performed_by: Option<User>,
+        message: String,
+    }
+    let mut response = db
+        .query(
+            "
+            SELECT performed_at, message, performed_by FROM audit_log
+            ORDER BY performed_at DESC
+            LIMIT 50
+            FETCH performed_by",
+        )
+        .await?;
+    let log_entries: Vec<LogEntry> = response.take(0)?;
 
     let response = html! {
         h1 { "Audit Log" }
@@ -173,6 +190,7 @@ async fn audit_log_index(Data(db): Data<&DB>) -> Result<Template> {
             thead {
                 tr {
                     th { "Performed at" }
+                    th { "Performed by" }
                     th { "Message" }
                 }
             }
@@ -181,6 +199,15 @@ async fn audit_log_index(Data(db): Data<&DB>) -> Result<Template> {
                     tr {
                         td {
                             (datetime(entry.performed_at.clone()))
+                        }
+                        td {
+                            @if let Some(performed_by) = &entry.performed_by {
+                                a href=(format!("/admin/users/{}", performed_by.clone().id.unwrap().id)) {
+                                    (performed_by.name)
+                                }
+                            } @else {
+                                "SYSTEM"
+                            }
                         }
                         td { (entry.message) }
                     }
