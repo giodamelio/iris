@@ -26,6 +26,9 @@ pub fn layout(m: Markup) -> Markup {
                             a href="/admin" { "Home" }
                         }
                         li {
+                            a href="/admin/audit_log" { "Audit Log" }
+                        }
+                        li {
                             a href="/admin/users" { "Users" }
                         }
                         li {

@@ -113,6 +113,7 @@ async fn main() -> anyhow::Result<()> {
     // Build our routing table
     let admin_router = Route::new()
         .at("/", get(index))
+        .at("/audit_log", get(audit_log_index))
         .at("/users", get(users_index))
         .at("/users/:user_id", get(users_show))
         .at("/groups", get(groups_index))
@@ -154,6 +155,39 @@ async fn index(Data(db): Data<&DB>) -> Result<Template> {
             }
             (groups_count) " groups "
             a href="/admin/groups" { "View" }
+        }
+    };
+
+    Ok(views::layout(response).into())
+}
+
+#[handler]
+async fn audit_log_index(Data(db): Data<&DB>) -> Result<Template> {
+    let log_entries: Vec<AuditLog> = db.select(AuditLog::name()).await?;
+
+    let response = html! {
+        h1 { "Audit Log" }
+
+        table {
+            thead {
+                tr {
+                    th { "Performed at" }
+                    th { "Message" }
+                }
+            }
+            tbody {
+                @for entry in &log_entries {
+                    @let datetime = entry.performed_at.to_rfc3339();
+                    tr {
+                        td {
+                            time datetime=(datetime) title=(datetime) {
+                                (datetime)
+                            }
+                        }
+                        td { (entry.message) }
+                    }
+                }
+            }
         }
     };
 
