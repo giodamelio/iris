@@ -68,7 +68,7 @@ async fn main() -> anyhow::Result<()> {
     }
 
     let app = Route::new()
-        .nest("/", routes::routes(&db).await)
+        .nest("/", routes::routes(&db).await?)
         .nest("/admin", admin::routes())
         .nest("/static", EmbeddedFilesEndpoint::<Assets>::new())
         .with(AddData::new(db));
