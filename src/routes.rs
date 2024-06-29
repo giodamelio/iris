@@ -1,12 +1,18 @@
 use anyhow::Result;
 use maud::html;
-use poem::{get, handler, Route};
+use poem::session::{CookieConfig, MemoryStorage, ServerSession};
+use poem::{get, handler, EndpointExt, Route};
 
 use crate::template::Template;
 use crate::views::layout;
 
-pub fn routes() -> poem::Route {
-    Route::new().at("/", get(index))
+pub fn routes() -> impl EndpointExt {
+    Route::new()
+        .at("/", get(index))
+        .with(ServerSession::<MemoryStorage>::new(
+            CookieConfig::new(),
+            MemoryStorage::new(),
+        ))
 }
 
 #[handler]
