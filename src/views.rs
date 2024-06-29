@@ -10,7 +10,7 @@ pub fn datetime<D: Into<DateTime<Utc>>>(dt: D) -> Markup {
     }
 }
 
-pub fn layout(m: Markup) -> Markup {
+pub fn admin_layout(m: Markup) -> Markup {
     html! {
         (DOCTYPE)
 

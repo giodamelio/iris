@@ -168,7 +168,7 @@ async fn index(Data(db): Data<&DB>) -> Result<Template> {
         }
     };
 
-    Ok(views::layout(response).into())
+    Ok(views::admin_layout(response).into())
 }
 
 #[handler]
@@ -222,7 +222,7 @@ async fn audit_log_index(Data(db): Data<&DB>) -> Result<Template> {
         }
     };
 
-    Ok(views::layout(response).into())
+    Ok(views::admin_layout(response).into())
 }
 
 #[handler]
@@ -237,7 +237,7 @@ async fn users_index(Data(db): Data<&DB>) -> Result<Template> {
         }
     };
 
-    Ok(views::layout(response).into())
+    Ok(views::admin_layout(response).into())
 }
 
 #[handler]
@@ -258,7 +258,7 @@ async fn users_show(Data(db): Data<&DB>, ExtractById(user): ExtractById<User>) -
         }
     };
 
-    Ok(views::layout(response).into())
+    Ok(views::admin_layout(response).into())
 }
 
 #[handler]
@@ -273,7 +273,7 @@ async fn groups_index(Data(db): Data<&DB>) -> Result<Template> {
         }
     };
 
-    Ok(views::layout(response).into())
+    Ok(views::admin_layout(response).into())
 }
 
 #[handler]
@@ -283,5 +283,5 @@ async fn groups_show(ExtractById(group): ExtractById<Group>) -> Result<Template>
         (group_card(&group))
     };
 
-    Ok(views::layout(response).into())
+    Ok(views::admin_layout(response).into())
 }
