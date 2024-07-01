@@ -22,7 +22,6 @@ pub fn layout(m: Markup) -> Markup {
             link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.classless.min.css";
             script src="https://unpkg.com/htmx.org@2.0.0" integrity="sha384-wS5l5IKJBvK6sPTKa2WZ1js3d947pvWXbPJ1OmWfEuxLgeHcEbjUUA5i9V5ZkpCw" crossorigin="anonymous" {}
             script type="module" src="/static/prettify_datetimes.js" {}
-            script type="module" src="/static/passkey.js" {}
         }
 
         body hx-boost="true" {
