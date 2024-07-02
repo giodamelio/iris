@@ -1,4 +1,5 @@
 use poem::endpoint::EmbeddedFilesEndpoint;
+use poem::middleware::Tracing;
 use poem::{listener::TcpListener, middleware::AddData, EndpointExt, Route, Server};
 use rust_embed::Embed;
 use tracing::{debug, info};
@@ -71,6 +72,7 @@ async fn main() -> anyhow::Result<()> {
         .nest("/", routes::routes(&db).await?)
         .nest("/admin", admin::routes())
         .nest("/static", EmbeddedFilesEndpoint::<Assets>::new())
+        .with(Tracing)
         .with(AddData::new(db));
 
     // Run our app
