@@ -10,6 +10,13 @@ pub fn datetime<D: Into<DateTime<Utc>>>(dt: D) -> Markup {
     }
 }
 
+fn unpoly() -> Markup {
+    html! {
+        script src="https://cdn.jsdelivr.net/npm/unpoly@3.8.0/unpoly.min.js" integrity="sha384-yy6W2QJYEjmd9vxdE4pvPrJ15/5rWk4qrpd3Gp4M13xc5Hzp4pn4ZtxzsR6XUNyp" crossorigin="anonymous" {}
+        link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/unpoly@3.8.0/unpoly.min.css" integrity="sha384-Is9x4GWs06J4kBhE9CfvxKY73C9HwM+3hpw0cNkpgAPcQnMFX04sJJSG0QXxN3zR" crossorigin="anonymous";
+    }
+}
+
 pub fn layout(m: Markup) -> Markup {
     html! {
         (DOCTYPE)
@@ -20,11 +27,11 @@ pub fn layout(m: Markup) -> Markup {
             meta name="color-scheme" content="light dark";
 
             link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.classless.min.css";
-            script src="https://unpkg.com/htmx.org@2.0.0" integrity="sha384-wS5l5IKJBvK6sPTKa2WZ1js3d947pvWXbPJ1OmWfEuxLgeHcEbjUUA5i9V5ZkpCw" crossorigin="anonymous" {}
+            (unpoly())
             script type="module" src="/static/prettify_datetimes.js" {}
         }
 
-        body hx-boost="true" {
+        body {
             header {
                 nav {
                     ul {
@@ -59,11 +66,11 @@ pub fn admin_layout(m: Markup) -> Markup {
             meta name="color-scheme" content="light dark";
 
             link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.classless.min.css";
-            script src="https://unpkg.com/htmx.org@2.0.0" integrity="sha384-wS5l5IKJBvK6sPTKa2WZ1js3d947pvWXbPJ1OmWfEuxLgeHcEbjUUA5i9V5ZkpCw" crossorigin="anonymous" {}
+            (unpoly())
             script type="module" src="/static/prettify_datetimes.js" {}
         }
 
-        body hx-boost="true" {
+        body {
             header {
                 nav {
                     ul {
