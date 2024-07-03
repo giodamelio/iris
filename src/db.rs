@@ -1,6 +1,6 @@
 use std::fmt::Debug;
 
-use anyhow::Result;
+use anyhow::{anyhow, Result};
 use serde::de::DeserializeOwned;
 use serde::Deserialize;
 use surrealdb::engine::remote::http::{Client, Http};
@@ -59,4 +59,15 @@ where
 {
     let user: Option<T> = db.select((T::name(), id)).await?;
     Ok(user)
+}
+
+pub async fn find_by_id_error<T, I>(db: &DB, id: I) -> Result<T>
+where
+    T: Named + DeserializeOwned,
+    I: Into<Id>,
+{
+    let item = find_by_id(db, id)
+        .await?
+        .ok_or(anyhow!("No such {}", T::name()))?;
+    Ok(item)
 }

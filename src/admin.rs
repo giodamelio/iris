@@ -1,4 +1,4 @@
-use anyhow::{anyhow, Result};
+use anyhow::Result;
 use maud::{html, Markup};
 use poem::post;
 use poem::web::{Form, Redirect};
@@ -6,7 +6,7 @@ use poem::{get, handler, web::Data, Route};
 use serde::Deserialize;
 use surrealdb::sql::Datetime;
 
-use crate::db::{find_by_id, Countable, Named, DB};
+use crate::db::{find_by_id_error, Countable, Named, DB};
 use crate::extractors::ExtractById;
 use crate::models::{Group, InvitePasskey, User};
 use crate::template::Template;
@@ -197,9 +197,7 @@ async fn create_invite_passkey(
     Form(create_data): Form<CreateInvitePasskey>,
 ) -> Result<Redirect> {
     // Verify that the user exists
-    let user: User = find_by_id(db, create_data.clone().user_id)
-        .await?
-        .ok_or(anyhow!("No such user"))?;
+    let user: User = find_by_id_error(db, create_data.clone().user_id).await?;
 
     // Create the invite
     let _new_invite: Vec<InvitePasskey> = db
