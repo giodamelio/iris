@@ -142,7 +142,7 @@ async fn users_show(Data(db): Data<&DB>, ExtractById(user): ExtractById<User>) -
             ul {
                 @for invite in &invites {
                     li {
-                        (invite.id)
+                        a href=(format!("/invite/passkey/{}", invite.id.id)) { (invite.id) }
                         " (created at: "
                         (datetime(invite.clone().created_at))
                         ", valid: "

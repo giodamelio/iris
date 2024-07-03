@@ -2,11 +2,14 @@ use anyhow::{anyhow, Result};
 use maud::html;
 use poem::session::{CookieConfig, CookieSession, Session};
 use poem::web::cookie::CookieKey;
+use poem::web::Data;
 use poem::{get, handler, EndpointExt, Route};
 use serde::{Deserialize, Serialize};
 use tokio::sync::OnceCell;
 
 use crate::db::DB;
+use crate::extractors::ExtractById;
+use crate::models::InvitePasskey;
 use crate::template::Template;
 use crate::views::layout;
 
@@ -52,6 +55,7 @@ pub async fn routes(db: &DB) -> Result<impl EndpointExt> {
 
     Ok(Route::new()
         .at("/", get(index))
+        .at("/invite/passkey/:invite_passkey_id", get(invite_passkey))
         .with(CookieSession::new(CookieConfig::private(
             cookie_key.clone(),
         ))))
@@ -71,6 +75,29 @@ async fn index(session: &Session) -> Result<Template> {
             }
             "You have been here " (count) " times!"
         }
+    };
+
+    Ok(layout(response).into())
+}
+
+#[handler]
+async fn invite_passkey(
+    _session: &Session,
+    Data(db): Data<&DB>,
+    ExtractById(invite): ExtractById<InvitePasskey>,
+) -> Result<Template> {
+    if !invite.is_valid() {
+        return Ok(layout(html! {
+            h1 { "Invite expired or already used" }
+        })
+        .into());
+    }
+
+    let user = invite.user(db).await?;
+
+    let response = html! {
+        h1 { "Register Passkey for " (user.email) }
+        button { "Start Registration" }
     };
 
     Ok(layout(response).into())

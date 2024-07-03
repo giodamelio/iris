@@ -3,7 +3,7 @@ use chrono::{Duration, Utc};
 use serde::{Deserialize, Serialize};
 use surrealdb::{opt::RecordId, sql::Datetime};
 
-use crate::db::{Countable, Named};
+use crate::db::{find_by_id_error, Countable, Named, DB};
 
 use super::User;
 
@@ -25,6 +25,10 @@ impl InvitePasskey {
             used: false,
             created_at: Utc::now().into(),
         })
+    }
+
+    pub async fn user(&self, db: &DB) -> Result<User> {
+        find_by_id_error(db, self.user.clone()).await
     }
 
     // Ensure invite has not already been used and the time is still valid
