@@ -1,12 +1,17 @@
-use anyhow::Result;
+use anyhow::{anyhow, Result};
 use maud::{html, Markup};
+use poem::http::StatusCode;
+use poem::post;
+use poem::web::{Form, Redirect};
 use poem::{get, handler, web::Data, Route};
 use serde::Deserialize;
+use surrealdb::opt::RecordId;
 use surrealdb::sql::Datetime;
+use tracing::info;
 
-use crate::db::{Countable, Named, DB};
+use crate::db::{find_by_id, Countable, Named, DB};
 use crate::extractors::ExtractById;
-use crate::models::{Group, User};
+use crate::models::{Group, InvitePasskey, User};
 use crate::template::Template;
 use crate::views::{admin_layout, datetime};
 
@@ -18,6 +23,7 @@ pub fn routes() -> poem::Route {
         .at("/users/:user_id", get(users_show))
         .at("/groups", get(groups_index))
         .at("/groups/:group_id", get(groups_show))
+        .at("/invite/passkey", post(create_invite_passkey))
 }
 
 #[handler]
@@ -124,7 +130,21 @@ async fn users_show(Data(db): Data<&DB>, ExtractById(user): ExtractById<User>) -
 
     let response = html! {
         h1 { "User" }
+
         (user_card(&user))
+
+        article #passkey-invites {
+            header {
+                h2 { "Passkey Invites" }
+                form action="/admin/invite/passkey" method="POST" up-submit up-target="#passkey-invites" {
+                    input type="hidden" name="user_id" value=(user.id.clone().unwrap().id) {}
+                    input type="submit" value="New" {}
+                 }
+            }
+            ul {
+                li { "Some items here" }
+            }
+        }
 
         article {
             h2 { "Member Groups" }
@@ -162,6 +182,33 @@ async fn groups_show(ExtractById(group): ExtractById<Group>) -> Result<Template>
     };
 
     Ok(admin_layout(response).into())
+}
+
+#[derive(Deserialize, Debug, Clone)]
+struct CreateInvitePasskey {
+    user_id: String,
+}
+
+#[handler]
+async fn create_invite_passkey(
+    Data(db): Data<&DB>,
+    Form(create_data): Form<CreateInvitePasskey>,
+) -> Result<Redirect> {
+    // Verify that the user exists
+    let user: User = find_by_id(db, create_data.clone().user_id)
+        .await?
+        .ok_or(anyhow!("No such user"))?;
+
+    // Create the invite
+    let _new_invite: Vec<InvitePasskey> = db
+        .create(InvitePasskey::name())
+        .content(InvitePasskey::for_user(user.clone())?)
+        .await?;
+
+    Ok(Redirect::see_other(format!(
+        "/admin/users/{}",
+        create_data.user_id,
+    )))
 }
 
 fn user_card(user: &User) -> Markup {
