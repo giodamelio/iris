@@ -8,7 +8,7 @@ use super::{Group, InvitePasskey};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct User {
-    pub id: Option<RecordId>,
+    pub id: RecordId,
     pub name: String,
     pub email: String,
 }
@@ -39,7 +39,7 @@ impl User {
     }
 
     pub fn link(&self) -> String {
-        format!("/admin/users/{}", self.id.clone().unwrap().id)
+        format!("/admin/users/{}", self.id.id)
     }
 }
 

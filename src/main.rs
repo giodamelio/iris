@@ -41,7 +41,7 @@ async fn main() -> anyhow::Result<()> {
         let new_group: Vec<Group> = db
             .create(Group::name())
             .content(Group {
-                id: None,
+                id: Group::random_id(),
                 name: "Test Group".to_string(),
             })
             .await?;
@@ -51,7 +51,7 @@ async fn main() -> anyhow::Result<()> {
             let new_user: Vec<User> = db
                 .create(User::name())
                 .content(User {
-                    id: None,
+                    id: User::random_id(),
                     name: format!("Test Person {}", i),
                     email: format!("test_{}@example.com", i),
                 })

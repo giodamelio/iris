@@ -5,13 +5,13 @@ use crate::db::{Countable, Named};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Group {
-    pub id: Option<RecordId>,
+    pub id: RecordId,
     pub name: String,
 }
 
 impl Group {
     pub fn link(&self) -> String {
-        format!("/admin/groups/{}", self.id.clone().unwrap().id)
+        format!("/admin/groups/{}", self.id.id)
     }
 }
 

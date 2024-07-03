@@ -4,6 +4,7 @@ use anyhow::Result;
 use serde::de::DeserializeOwned;
 use serde::Deserialize;
 use surrealdb::engine::remote::http::{Client, Http};
+use surrealdb::opt::RecordId;
 use surrealdb::sql::Id;
 use surrealdb::Surreal;
 use tracing::debug;
@@ -22,6 +23,10 @@ impl Debug for Count {
 
 pub trait Named {
     fn name() -> &'static str;
+
+    fn random_id() -> RecordId {
+        (Self::name(), Id::rand()).into()
+    }
 }
 
 pub trait Countable: Named {

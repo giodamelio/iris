@@ -135,14 +135,14 @@ async fn users_show(Data(db): Data<&DB>, ExtractById(user): ExtractById<User>) -
             header {
                 h2 { "Passkey Invites" }
                 form action="/admin/invite/passkey" method="POST" up-submit up-target="#passkey-invites" {
-                    input type="hidden" name="user_id" value=(user.id.clone().unwrap().id) {}
+                    input type="hidden" name="user_id" value=(user.id.id) {}
                     input type="submit" value="New" {}
                  }
             }
             ul {
                 @for invite in &invites {
                     li {
-                        (invite.id.clone().unwrap().id) " (created at: " (datetime(invite.clone().created_at)) ")"
+                        (invite.id) " (created at: " (datetime(invite.clone().created_at)) ")"
                     }
                 }
             }
@@ -226,7 +226,7 @@ fn user_card(user: &User) -> Markup {
             ul {
                 li {
                     strong { "ID: " }
-                    (user.id.clone().unwrap().id)
+                    (user.id)
                 }
                 li {
                     strong { "Email: " }
@@ -250,7 +250,7 @@ fn group_card(group: &Group) -> Markup {
             ul {
                 li {
                     strong { "ID: " }
-                    (group.id.clone().unwrap().id)
+                    (group.id.to_string())
                 }
             }
         }

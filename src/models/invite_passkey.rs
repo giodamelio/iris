@@ -1,4 +1,4 @@
-use anyhow::{anyhow, Result};
+use anyhow::Result;
 use chrono::{Duration, Utc};
 use serde::{Deserialize, Serialize};
 use surrealdb::{opt::RecordId, sql::Datetime};
@@ -9,7 +9,7 @@ use super::User;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct InvitePasskey {
-    pub id: Option<RecordId>,
+    pub id: RecordId,
     pub user: RecordId,
     pub valid_until: Datetime,
     pub used: bool,
@@ -19,8 +19,8 @@ pub struct InvitePasskey {
 impl InvitePasskey {
     pub fn for_user(user_id: User) -> Result<Self> {
         Ok(Self {
-            id: None,
-            user: user_id.id.ok_or(anyhow!("User ID cannot be converted"))?,
+            id: Self::random_id(),
+            user: user_id.id,
             valid_until: (Utc::now() + Duration::minutes(10)).into(),
             used: false,
             created_at: Utc::now().into(),

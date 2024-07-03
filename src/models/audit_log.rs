@@ -9,7 +9,7 @@ use super::User;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct AuditLog {
-    pub id: Option<RecordId>,
+    pub id: RecordId,
     pub performed_at: Datetime,
     pub performed_by: Option<RecordId>,
     pub message: String,
@@ -24,9 +24,9 @@ impl AuditLog {
         let log_entry: Vec<AuditLog> = db
             .create(Self::name())
             .content(AuditLog {
-                id: None,
+                id: Self::random_id(),
                 performed_at: Utc::now().into(),
-                performed_by: user.clone().and_then(|u| u.id),
+                performed_by: user.clone().map(|u| u.id),
                 message: message.into(),
             })
             .await?;
