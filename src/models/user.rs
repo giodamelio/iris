@@ -29,6 +29,7 @@ impl User {
                 "
                 SELECT * FROM invite_passkey
                 WHERE user.id = $id
+                ORDER BY created_at DESC
                 ",
             )
             .bind(self)

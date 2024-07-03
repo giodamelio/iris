@@ -1,10 +1,7 @@
 use anyhow::{anyhow, Result};
 use chrono::{Duration, Utc};
 use serde::{Deserialize, Serialize};
-use surrealdb::{
-    opt::RecordId,
-    sql::{Datetime, Id},
-};
+use surrealdb::{opt::RecordId, sql::Datetime};
 
 use crate::db::{Countable, Named};
 
@@ -16,6 +13,7 @@ pub struct InvitePasskey {
     pub user: RecordId,
     pub valid_until: Datetime,
     pub used: bool,
+    pub created_at: Datetime,
 }
 
 impl InvitePasskey {
@@ -25,6 +23,7 @@ impl InvitePasskey {
             user: user_id.id.ok_or(anyhow!("User ID cannot be converted"))?,
             valid_until: (Utc::now() + Duration::minutes(10)).into(),
             used: false,
+            created_at: Utc::now().into(),
         })
     }
 }
