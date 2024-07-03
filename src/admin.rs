@@ -1,13 +1,10 @@
 use anyhow::{anyhow, Result};
 use maud::{html, Markup};
-use poem::http::StatusCode;
 use poem::post;
 use poem::web::{Form, Redirect};
 use poem::{get, handler, web::Data, Route};
 use serde::Deserialize;
-use surrealdb::opt::RecordId;
 use surrealdb::sql::Datetime;
-use tracing::info;
 
 use crate::db::{find_by_id, Countable, Named, DB};
 use crate::extractors::ExtractById;
@@ -127,6 +124,7 @@ async fn users_index(Data(db): Data<&DB>) -> Result<Template> {
 #[handler]
 async fn users_show(Data(db): Data<&DB>, ExtractById(user): ExtractById<User>) -> Result<Template> {
     let groups = user.groups(db).await?;
+    let invites = user.invite_passkeys(db).await?;
 
     let response = html! {
         h1 { "User" }
@@ -142,7 +140,9 @@ async fn users_show(Data(db): Data<&DB>, ExtractById(user): ExtractById<User>) -
                  }
             }
             ul {
-                li { "Some items here" }
+                @for invite in &invites {
+                    li { (invite.id.clone().unwrap().id) }
+                }
             }
         }
 

@@ -4,7 +4,7 @@ use surrealdb::opt::RecordId;
 
 use crate::db::{Countable, Named, DB};
 
-use super::Group;
+use super::{Group, InvitePasskey};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct User {
@@ -17,6 +17,20 @@ impl User {
     pub async fn groups(&self, db: &DB) -> Result<Vec<Group>> {
         let mut response = db
             .query("SELECT VALUE ->member->group.* AS groups FROM ONLY $id")
+            .bind(self)
+            .await?;
+
+        Ok(response.take(0)?)
+    }
+
+    pub async fn invite_passkeys(&self, db: &DB) -> Result<Vec<InvitePasskey>> {
+        let mut response = db
+            .query(
+                "
+                SELECT * FROM invite_passkey
+                WHERE user.id = $id
+                ",
+            )
             .bind(self)
             .await?;
 
