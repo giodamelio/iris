@@ -26,6 +26,11 @@ impl InvitePasskey {
             created_at: Utc::now().into(),
         })
     }
+
+    // Ensure invite has not already been used and the time is still valid
+    pub fn is_valid(&self) -> bool {
+        Utc::now() < self.valid_until.0 && !self.used
+    }
 }
 
 impl Countable for InvitePasskey {}

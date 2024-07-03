@@ -142,7 +142,12 @@ async fn users_show(Data(db): Data<&DB>, ExtractById(user): ExtractById<User>) -
             ul {
                 @for invite in &invites {
                     li {
-                        (invite.id) " (created at: " (datetime(invite.clone().created_at)) ")"
+                        (invite.id)
+                        " (created at: "
+                        (datetime(invite.clone().created_at))
+                        ", valid: "
+                        (invite.is_valid())
+                        ")"
                     }
                 }
             }
