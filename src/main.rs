@@ -28,7 +28,7 @@ async fn main() -> anyhow::Result<()> {
     let db = db::init().await?;
 
     // Create some test users if they don't exist
-    if true {
+    if false {
         debug!("Creating Test Data");
 
         // Delete existing data
