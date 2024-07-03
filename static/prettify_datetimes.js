@@ -69,7 +69,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
   observer.observe(document.body, config);
 
   // Process any time elements added by htmx
-  document.addEventListener('htmx:afterSwap', function(_event) {
+  up.on('up:fragment:inserted', function(_event) {
     document.querySelectorAll('time').forEach(processTimeElement);
   });
 
