@@ -18,7 +18,10 @@ in {
     exec = "${pkgs.surrealdb}/bin/surreal start --bind 127.0.0.1:8000 file:dev.db";
   };
 
-  scripts.dev.exec = "cargo watch -x run";
+  scripts = {
+    dev.exec = "cargo watch -x run";
+    seed_database.exec = "cargo run --bin seed_database";
+  };
 
-  env.RUST_LOG = "iris=trace";
+  env.RUST_LOG = "server=trace,seed_database=trace";
 }

@@ -2,10 +2,7 @@ use poem::endpoint::EmbeddedFilesEndpoint;
 use poem::middleware::Tracing;
 use poem::{listener::TcpListener, middleware::AddData, EndpointExt, Route, Server};
 use rust_embed::Embed;
-use tracing::{debug, info};
-
-use crate::db::Named;
-use crate::models::{AuditLog, Group, User};
+use tracing::info;
 
 mod admin;
 mod db;
@@ -27,47 +24,7 @@ async fn main() -> anyhow::Result<()> {
     // Init DB
     let db = db::init().await?;
 
-    // Create some test users if they don't exist
-    if false {
-        debug!("Creating Test Data");
-
-        // Delete existing data
-        db.query("DELETE user").await?;
-        db.query("DELETE group").await?;
-        db.query("DELETE audit_log").await?;
-
-        // Create a test Group
-        AuditLog::log(&db, None, "Creating new test group").await?;
-        let new_group: Vec<Group> = db
-            .create(Group::name())
-            .content(Group {
-                id: Group::random_id(),
-                name: "Test Group".to_string(),
-            })
-            .await?;
-
-        AuditLog::log(&db, None, "Creating 100 test users").await?;
-        for i in 1..=100 {
-            let new_user: Vec<User> = db
-                .create(User::name())
-                .content(User {
-                    id: User::random_id(),
-                    name: format!("Test Person {}", i),
-                    email: format!("test_{}@example.com", i),
-                })
-                .await?;
-
-            AuditLog::log(&db, Some(new_user[0].clone()), "Created new user").await?;
-
-            // Make the user a member of the test group
-            let _relate_response = db
-                .query("RELATE $user->member->$group")
-                .bind(("user", new_user[0].id.clone()))
-                .bind(("group", new_group[0].id.clone()))
-                .await?;
-        }
-    }
-
+    // Build our route table
     let app = Route::new()
         .nest("/", routes::routes(&db).await?)
         .nest("/admin", admin::routes())
