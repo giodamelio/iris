@@ -97,7 +97,10 @@ async fn invite_passkey(
 
     let response = html! {
         h1 { "Register Passkey for " (user.email) }
-        button { "Start Registration" }
+        form {
+            input type="text" placeholder="Passkey Name" {}
+            input type="submit" value="Create Passkey" {}
+        }
     };
 
     Ok(layout(response).into())
