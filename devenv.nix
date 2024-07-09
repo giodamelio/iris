@@ -9,6 +9,7 @@ in {
   packages = with pkgs; [
     surrealdb
     cargo-watch
+    openssl
 
     # TODO: remove this when a new version lands in Nixpkgs unstable
     inputs.nixpkgs-surrealist-pr.legacyPackages.${system}.surrealist
