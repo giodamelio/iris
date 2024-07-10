@@ -35,11 +35,10 @@ async fn main() -> anyhow::Result<()> {
     for i in 1..=100 {
         let new_user: Vec<User> = db
             .create(User::name())
-            .content(User {
-                id: User::random_id(),
-                name: format!("Test Person {}", i),
-                email: format!("test_{}@example.com", i),
-            })
+            .content(User::new(
+                format!("Test Person {}", i),
+                format!("test_{}@example.com", i),
+            ))
             .await?;
 
         AuditLog::log(&db, Some(new_user[0].clone()), "Created new user").await?;

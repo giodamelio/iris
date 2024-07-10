@@ -1,11 +1,14 @@
 use anyhow::{anyhow, Result};
 use maud::html;
+use poem::middleware::AddData;
 use poem::session::{CookieConfig, CookieSession, Session};
 use poem::web::cookie::CookieKey;
 use poem::web::Data;
 use poem::{get, handler, EndpointExt, Route};
 use serde::{Deserialize, Serialize};
 use tokio::sync::OnceCell;
+use tracing::info;
+use webauthn_rs::prelude::*;
 
 use crate::db::DB;
 use crate::extractors::ExtractById;
@@ -53,9 +56,19 @@ async fn cookie_key(db: &DB) -> Result<&CookieKey> {
 pub async fn routes(db: &DB) -> Result<impl EndpointExt> {
     let cookie_key = cookie_key(db).await?;
 
+    // Setup WebAuthn
+    let rp_id = "localhost";
+    let rp_origin = Url::parse("https://localhost:3000/")?; // Must include port
+    let webauthn = WebauthnBuilder::new(rp_id, &rp_origin)?
+        .rp_name("Iris Localhost Testing")
+        .build()?;
+
+    info!("{:#?}", webauthn);
+
     Ok(Route::new()
         .at("/", get(index))
         .at("/invite/passkey/:invite_passkey_id", get(invite_passkey))
+        .with(AddData::new(webauthn))
         .with(CookieSession::new(CookieConfig::private(
             cookie_key.clone(),
         ))))
@@ -82,8 +95,9 @@ async fn index(session: &Session) -> Result<Template> {
 
 #[handler]
 async fn invite_passkey(
-    _session: &Session,
+    session: &Session,
     Data(db): Data<&DB>,
+    Data(webauthn): Data<&Webauthn>,
     ExtractById(invite): ExtractById<InvitePasskey>,
 ) -> Result<Template> {
     if !invite.is_valid() {
@@ -93,7 +107,18 @@ async fn invite_passkey(
         .into());
     }
 
+    // Get the user from the invite
     let user = invite.user(db).await?;
+
+    // Start the registration
+    let (challenge, registration_state) =
+        webauthn.start_passkey_registration(user.webauth_id(), &user.email, &user.name, None)?;
+
+    // Save the state into the session
+    // This is not public info, the cookie encryption is important!
+    session.set("registration_state", registration_state);
+
+    info!("Passkey registration: {:#?}", challenge);
 
     let response = html! {
         h1 { "Register Passkey for " (user.email) }
