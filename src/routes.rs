@@ -1,5 +1,5 @@
 use anyhow::{anyhow, Result};
-use maud::html;
+use maud::{html, PreEscaped};
 use poem::middleware::AddData;
 use poem::session::{CookieConfig, CookieSession, Session};
 use poem::web::cookie::CookieKey;
@@ -118,9 +118,13 @@ async fn invite_passkey(
     // This is not public info, the cookie encryption is important!
     session.set("registration_state", registration_state);
 
-    info!("Passkey registration: {:#?}", challenge);
+    // Get the JSON version of the challenge
+    let json_challenge = serde_json::to_string(&challenge)?;
 
     let response = html! {
+        script #challenge type="application/json" {
+            (PreEscaped(json_challenge))
+        }
         h1 { "Register Passkey for " (user.email) }
         form {
             input type="text" placeholder="Passkey Name" {}

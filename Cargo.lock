@@ -1754,6 +1754,7 @@ dependencies = [
  "poem",
  "rust-embed",
  "serde",
+ "serde_json",
  "surrealdb",
  "tokio",
  "tracing",
