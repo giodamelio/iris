@@ -37,7 +37,7 @@ defmodule IrisWeb.Router do
     scope "/dev" do
       pipe_through :browser
 
-      live_dashboard "/dashboard", metrics: IrisWeb.Telemetry
+      live_dashboard "/dashboard", metrics: IrisWeb.Telemetry, ecto_repos: [Iris.Repo]
       forward "/mailbox", Plug.Swoosh.MailboxPreview
     end
   end

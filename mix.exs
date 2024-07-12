@@ -19,7 +19,7 @@ defmodule Iris.MixProject do
   def application do
     [
       mod: {Iris.Application, []},
-      extra_applications: [:logger, :runtime_tools]
+      extra_applications: [:logger, :runtime_tools, :os_mon]
     ]
   end
 
@@ -59,7 +59,8 @@ defmodule Iris.MixProject do
       {:jason, "~> 1.2"},
       {:dns_cluster, "~> 0.1.1"},
       {:bandit, "~> 1.5"},
-      {:wax_, "~> 0.6.5"}
+      {:wax_, "~> 0.6.5"},
+      {:ecto_sqlite3_extras, "~> 1.2.0"},
     ]
   end
 
