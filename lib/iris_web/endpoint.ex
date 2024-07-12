@@ -8,7 +8,8 @@ defmodule IrisWeb.Endpoint do
     store: :cookie,
     key: "_iris_key",
     signing_salt: "xXpKfSve",
-    same_site: "Lax"
+    encryption_salt: "sxKlwkiA",
+    same_site: "Strict"
   ]
 
   socket "/live", Phoenix.LiveView.Socket,
