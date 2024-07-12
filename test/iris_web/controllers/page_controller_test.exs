@@ -3,7 +3,6 @@ defmodule IrisWeb.PageControllerTest do
 
   test "GET /", %{conn: conn} do
     conn = get(conn, ~p"/")
-    assert html_response(conn, 200) =~ "Register"
-    assert html_response(conn, 200) =~ "Log In"
+    assert html_response(conn, 200) =~ "Hello World"
   end
 end

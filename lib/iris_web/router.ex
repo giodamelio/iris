@@ -20,6 +20,13 @@ defmodule IrisWeb.Router do
     get "/", PageController, :home
   end
 
+  # Admin routes
+  scope "/admin", IrisWeb do
+    pipe_through :browser
+
+    resources "/invites", InviteController
+  end
+
   # Other scopes may use custom stacks.
   # scope "/api", IrisWeb do
   #   pipe_through :api

@@ -1,0 +1,8 @@
+<.header>
+  New Invite
+  <:subtitle>Use this form to manage invite records in your database.</:subtitle>
+</.header>
+
+<.invite_form changeset={@changeset} action={~p"/admin/invites"} />
+
+<.back navigate={~p"/admin/invites"}>Back to invites</.back>

@@ -1,0 +1,16 @@
+<.header>
+  Invite <%= @invite.id %>
+  <:subtitle>This is a invite record from your database.</:subtitle>
+  <:actions>
+    <.link href={~p"/admin/invites/#{@invite}/edit"}>
+      <.button>Edit invite</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.list>
+  <:item title="Valid until"><%= @invite.valid_until %></:item>
+  <:item title="Used"><%= @invite.used %></:item>
+</.list>
+
+<.back navigate={~p"/admin/invites"}>Back to invites</.back>
