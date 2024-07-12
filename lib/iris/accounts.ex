@@ -38,6 +38,22 @@ defmodule Iris.Accounts do
   def get_invite!(id), do: Repo.get!(Invite, id)
 
   @doc """
+  Gets a single invite by it's external_id
+
+  Raises `Ecto.NoResultsError` if the Invite does not exist.
+
+  ## Examples
+
+      iex> get_invite_external_id!("108722d0-6492-475c-8696-d04758328d48")
+      %Invite{}
+
+      iex> get_invite_external_id!("00000000-00000000-00000000-00000000")
+      ** (Ecto.NoResultsError)
+
+  """
+  def get_invite_external_id!(id), do: Repo.get_by!(Invite, external_id: id)
+
+  @doc """
   Creates a invite.
 
   ## Examples

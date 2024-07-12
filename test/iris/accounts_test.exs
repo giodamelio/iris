@@ -22,6 +22,11 @@ defmodule Iris.AccountsTest do
       assert Accounts.get_invite!(invite.id) == invite
     end
 
+    test "get_invite_external_id!/1 returns the invite with given external id" do
+      invite = invite_fixture()
+      assert Accounts.get_invite_external_id!(invite.external_id) == invite
+    end
+
     test "create_invite/1 with valid data creates a invite" do
       valid_attrs = %{used: true, valid_until: ~U[2024-07-11 22:08:00Z]}
 
