@@ -13,5 +13,6 @@ devenv.local.nix
 
 /target
 
-# Test DBs
-*.db
+# Local Elixir Tools
+.mix/
+.hex/
