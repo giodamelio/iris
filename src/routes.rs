@@ -119,15 +119,16 @@ async fn invite_passkey(
     session.set("registration_state", registration_state);
 
     // Get the JSON version of the challenge
+    info!("Challenge: {:#?}", challenge);
     let json_challenge = serde_json::to_string(&challenge)?;
 
     let response = html! {
         script #challenge type="application/json" {
             (PreEscaped(json_challenge))
         }
+        script type="module" src="/static/passkey.js" {}
         h1 { "Register Passkey for " (user.email) }
         form {
-            input type="text" placeholder="Passkey Name" {}
             input type="submit" value="Create Passkey" {}
         }
     };
