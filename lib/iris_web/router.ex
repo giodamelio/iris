@@ -18,6 +18,7 @@ defmodule IrisWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :home
+    live "/invite/:id", InviteLive
   end
 
   # Admin routes
