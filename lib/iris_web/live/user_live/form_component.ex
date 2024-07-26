@@ -22,7 +22,7 @@ defmodule IrisWeb.UserLive.FormComponent do
         <.input field={@form[:full_name]} type="text" label="Full name" />
         <.input field={@form[:email]} type="text" label="Email" />
         <:actions>
-          <.button phx-disable-with="Saving...">Save User</.button>
+          <.button phx-disable-with="Saving..." class="button is-primary">Save User</.button>
         </:actions>
       </.simple_form>
     </div>
