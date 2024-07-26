@@ -355,7 +355,6 @@ defmodule IrisWeb.CoreComponents do
           value={Phoenix.HTML.Form.normalize_value(@type, @value)}
           class={[
             "input",
-            @errors == [] && "is-success",
             @errors != [] && "is-danger"
           ]}
           {@rest}
