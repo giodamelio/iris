@@ -25,6 +25,7 @@ defmodule IrisWeb.Router do
   scope "/admin", IrisWeb do
     pipe_through :browser
 
+    get "/", AdminController, :index
     resources "/invites", InviteController
 
     # Users routes
