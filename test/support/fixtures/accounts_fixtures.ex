@@ -13,4 +13,19 @@ defmodule Iris.AccountsFixtures do
 
     invite
   end
+
+  @doc """
+  Generate a user.
+  """
+  def user_fixture(attrs \\ %{}) do
+    {:ok, user} =
+      attrs
+      |> Enum.into(%{
+        email: "some email",
+        full_name: "some full_name"
+      })
+      |> Iris.Accounts.create_user()
+
+    user
+  end
 end
