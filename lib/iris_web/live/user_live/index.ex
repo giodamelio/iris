@@ -6,7 +6,12 @@ defmodule IrisWeb.UserLive.Index do
 
   @impl true
   def mount(_params, _session, socket) do
-    {:ok, stream(socket, :users, Accounts.list_users())}
+    socket =
+      socket
+      |> stream(:users, Accounts.list_users())
+      |> assign(:users_count, Accounts.count_users())
+
+    {:ok, socket}
   end
 
   @impl true
@@ -34,7 +39,12 @@ defmodule IrisWeb.UserLive.Index do
 
   @impl true
   def handle_info({IrisWeb.UserLive.FormComponent, {:saved, user}}, socket) do
-    {:noreply, stream_insert(socket, :users, user)}
+    socket =
+      socket
+      |> stream_insert(:users, user)
+      |> assign(:users_count, Accounts.count_users())
+
+    {:noreply, socket}
   end
 
   @impl true
@@ -42,6 +52,11 @@ defmodule IrisWeb.UserLive.Index do
     user = Accounts.get_user!(id)
     {:ok, _} = Accounts.delete_user(user)
 
-    {:noreply, stream_delete(socket, :users, user)}
+    socket =
+      socket
+      |> stream_delete(:users, user)
+      |> assign(:users_count, Accounts.count_users())
+
+    {:noreply, socket}
   end
 end

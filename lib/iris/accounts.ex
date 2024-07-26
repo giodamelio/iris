@@ -134,6 +134,19 @@ defmodule Iris.Accounts do
   end
 
   @doc """
+  Returns the count of users.
+
+  ## Examples
+
+      iex> count_users()
+      1
+
+  """
+  def count_users do
+    Repo.aggregate(User, :count, :id)
+  end
+
+  @doc """
   Gets a single user.
 
   Raises `Ecto.NoResultsError` if the User does not exist.
