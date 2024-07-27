@@ -8,10 +8,12 @@ defmodule IrisWeb.AdminController do
   end
 
   def create_user_invite(conn, _params) do
-    redirect(conn, to: ~p"/admin/user_invites/10")
+    {:ok, user_invite} = Accounts.create_user_invite()
+    redirect(conn, to: ~p"/admin/user_invites/#{user_invite.id}")
   end
 
-  def show_user_invite(conn, _params) do
-    render(conn, :show_user_invite)
+  def show_user_invite(conn, params) do
+    user_invite = Accounts.get_user_invite!(params["id"])
+    render(conn, :show_user_invite, user_invite: user_invite)
   end
 end
