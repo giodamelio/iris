@@ -19,10 +19,11 @@ defmodule IrisWeb.InviteUserLive do
     ~H"""
     <.live_component
       module={IrisWeb.UserLive.FormComponent}
-      id={:new}
+      id={:new_from_invite}
       title="Create User"
-      action={:new}
+      action={:new_from_invite}
       user={%User{}}
+      invite={assigns.invite}
     />
     """
   end

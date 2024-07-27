@@ -45,10 +45,10 @@ defmodule IrisWeb.UserLive.FormComponent do
   end
 
   def handle_event("save", %{"user" => user_params}, socket) do
-    save_user(socket, socket.assigns.action, user_params)
+    save_user(socket, socket.assigns.action, user_params, Map.get(socket.assigns, :invite))
   end
 
-  defp save_user(socket, :edit, user_params) do
+  defp save_user(socket, :edit, user_params, _invite) do
     case Accounts.update_user(socket.assigns.user, user_params) do
       {:ok, user} ->
         notify_parent({:saved, user})
@@ -69,8 +69,29 @@ defmodule IrisWeb.UserLive.FormComponent do
     end
   end
 
-  defp save_user(socket, :new, user_params) do
+  defp save_user(socket, :new, user_params, _invite) do
     case Accounts.create_user(user_params) do
+      {:ok, user} ->
+        notify_parent({:saved, user})
+
+        socket = put_flash(socket, :info, "User created successfully")
+
+        socket =
+          if Map.has_key?(socket.assigns, :patch) do
+            push_patch(socket, to: socket.assigns.patch)
+          else
+            socket
+          end
+
+        {:noreply, socket}
+
+      {:error, %Ecto.Changeset{} = changeset} ->
+        {:noreply, assign(socket, form: to_form(changeset))}
+    end
+  end
+
+  defp save_user(socket, :new_from_invite, user_params, invite) do
+    case Accounts.create_user_from_invite(user_params, invite) do
       {:ok, user} ->
         notify_parent({:saved, user})
 
