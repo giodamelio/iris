@@ -139,6 +139,16 @@ defmodule Iris.AccountsTest do
       assert Accounts.get_user_invite!(user_invite.id) == user_invite
     end
 
+    test "get_user_invite_by_external_id!/1 returns the user_invite with given external id" do
+      user_invite = user_invite_fixture()
+      assert Accounts.get_user_invite_by_external_id(user_invite.external_id) == user_invite
+    end
+
+    test "get_user_invite_by_external_id/1 returns nil for user that doesn't exist" do
+      assert Accounts.get_user_invite_by_external_id("7488a646-e31f-11e4-aace-600308960668") ==
+               nil
+    end
+
     test "create_user_invite/0 with valid data creates a user_invite" do
       assert {:ok, %UserInvite{} = user_invite} = Accounts.create_user_invite()
       assert user_invite.external_id != nil

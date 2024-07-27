@@ -259,6 +259,24 @@ defmodule Iris.Accounts do
   def get_user_invite!(id), do: Repo.get!(UserInvite, id)
 
   @doc """
+  Gets a single user_invite by it's external id
+
+  Returns nil if the User invite does not exist.
+
+  ## Examples
+
+      iex> get_user_invite_by_external_id("108c8fc3-5f53-45e0-b41c-70fa1c9eff10")
+      %UserInvite{}
+
+      iex> get_user_invite_by_external_id("e79d9001-6b9a-437d-9a28-a9861b797689")
+      nil
+
+  """
+  def get_user_invite_by_external_id(id) do
+    Repo.one(from ui in UserInvite, where: ui.external_id == ^id)
+  end
+
+  @doc """
   Creates a user_invite.
 
   ## Examples
