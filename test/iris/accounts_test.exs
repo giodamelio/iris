@@ -121,4 +121,60 @@ defmodule Iris.AccountsTest do
       assert %Ecto.Changeset{} = Accounts.change_user(user)
     end
   end
+
+  describe "user_invites" do
+    alias Iris.Accounts.UserInvite
+
+    import Iris.AccountsFixtures
+
+    @invalid_attrs %{external_id: nil, used: nil}
+
+    test "list_user_invites/0 returns all user_invites" do
+      user_invite = user_invite_fixture()
+      assert Accounts.list_user_invites() == [user_invite]
+    end
+
+    test "get_user_invite!/1 returns the user_invite with given id" do
+      user_invite = user_invite_fixture()
+      assert Accounts.get_user_invite!(user_invite.id) == user_invite
+    end
+
+    test "create_user_invite/1 with valid data creates a user_invite" do
+      valid_attrs = %{external_id: "7488a646-e31f-11e4-aace-600308960662", used: true}
+
+      assert {:ok, %UserInvite{} = user_invite} = Accounts.create_user_invite(valid_attrs)
+      assert user_invite.external_id == "7488a646-e31f-11e4-aace-600308960662"
+      assert user_invite.used == true
+    end
+
+    test "create_user_invite/1 with invalid data returns error changeset" do
+      assert {:error, %Ecto.Changeset{}} = Accounts.create_user_invite(@invalid_attrs)
+    end
+
+    test "update_user_invite/2 with valid data updates the user_invite" do
+      user_invite = user_invite_fixture()
+      update_attrs = %{external_id: "7488a646-e31f-11e4-aace-600308960668", used: false}
+
+      assert {:ok, %UserInvite{} = user_invite} = Accounts.update_user_invite(user_invite, update_attrs)
+      assert user_invite.external_id == "7488a646-e31f-11e4-aace-600308960668"
+      assert user_invite.used == false
+    end
+
+    test "update_user_invite/2 with invalid data returns error changeset" do
+      user_invite = user_invite_fixture()
+      assert {:error, %Ecto.Changeset{}} = Accounts.update_user_invite(user_invite, @invalid_attrs)
+      assert user_invite == Accounts.get_user_invite!(user_invite.id)
+    end
+
+    test "delete_user_invite/1 deletes the user_invite" do
+      user_invite = user_invite_fixture()
+      assert {:ok, %UserInvite{}} = Accounts.delete_user_invite(user_invite)
+      assert_raise Ecto.NoResultsError, fn -> Accounts.get_user_invite!(user_invite.id) end
+    end
+
+    test "change_user_invite/1 returns a user_invite changeset" do
+      user_invite = user_invite_fixture()
+      assert %Ecto.Changeset{} = Accounts.change_user_invite(user_invite)
+    end
+  end
 end

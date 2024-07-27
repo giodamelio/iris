@@ -226,4 +226,100 @@ defmodule Iris.Accounts do
   def change_user(%User{} = user, attrs \\ %{}) do
     User.changeset(user, attrs)
   end
+
+  alias Iris.Accounts.UserInvite
+
+  @doc """
+  Returns the list of user_invites.
+
+  ## Examples
+
+      iex> list_user_invites()
+      [%UserInvite{}, ...]
+
+  """
+  def list_user_invites do
+    Repo.all(UserInvite)
+  end
+
+  @doc """
+  Gets a single user_invite.
+
+  Raises `Ecto.NoResultsError` if the User invite does not exist.
+
+  ## Examples
+
+      iex> get_user_invite!(123)
+      %UserInvite{}
+
+      iex> get_user_invite!(456)
+      ** (Ecto.NoResultsError)
+
+  """
+  def get_user_invite!(id), do: Repo.get!(UserInvite, id)
+
+  @doc """
+  Creates a user_invite.
+
+  ## Examples
+
+      iex> create_user_invite(%{field: value})
+      {:ok, %UserInvite{}}
+
+      iex> create_user_invite(%{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def create_user_invite(attrs \\ %{}) do
+    %UserInvite{}
+    |> UserInvite.changeset(attrs)
+    |> Repo.insert()
+  end
+
+  @doc """
+  Updates a user_invite.
+
+  ## Examples
+
+      iex> update_user_invite(user_invite, %{field: new_value})
+      {:ok, %UserInvite{}}
+
+      iex> update_user_invite(user_invite, %{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def update_user_invite(%UserInvite{} = user_invite, attrs) do
+    user_invite
+    |> UserInvite.changeset(attrs)
+    |> Repo.update()
+  end
+
+  @doc """
+  Deletes a user_invite.
+
+  ## Examples
+
+      iex> delete_user_invite(user_invite)
+      {:ok, %UserInvite{}}
+
+      iex> delete_user_invite(user_invite)
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def delete_user_invite(%UserInvite{} = user_invite) do
+    Repo.delete(user_invite)
+  end
+
+  @doc """
+  Returns an `%Ecto.Changeset{}` for tracking user_invite changes.
+
+  ## Examples
+
+      iex> change_user_invite(user_invite)
+      %Ecto.Changeset{data: %UserInvite{}}
+
+  """
+  def change_user_invite(%UserInvite{} = user_invite, attrs \\ %{}) do
+    UserInvite.changeset(user_invite, attrs)
+  end
 end

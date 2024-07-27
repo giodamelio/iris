@@ -28,4 +28,19 @@ defmodule Iris.AccountsFixtures do
 
     user
   end
+
+  @doc """
+  Generate a user_invite.
+  """
+  def user_invite_fixture(attrs \\ %{}) do
+    {:ok, user_invite} =
+      attrs
+      |> Enum.into(%{
+        external_id: "7488a646-e31f-11e4-aace-600308960662",
+        used: true
+      })
+      |> Iris.Accounts.create_user_invite()
+
+    user_invite
+  end
 end
