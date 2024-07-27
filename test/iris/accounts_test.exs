@@ -139,30 +139,29 @@ defmodule Iris.AccountsTest do
       assert Accounts.get_user_invite!(user_invite.id) == user_invite
     end
 
-    test "create_user_invite/1 with valid data creates a user_invite" do
-      valid_attrs = %{external_id: "7488a646-e31f-11e4-aace-600308960662", used: true}
-
-      assert {:ok, %UserInvite{} = user_invite} = Accounts.create_user_invite(valid_attrs)
-      assert user_invite.external_id == "7488a646-e31f-11e4-aace-600308960662"
-      assert user_invite.used == true
-    end
-
-    test "create_user_invite/1 with invalid data returns error changeset" do
-      assert {:error, %Ecto.Changeset{}} = Accounts.create_user_invite(@invalid_attrs)
+    test "create_user_invite/0 with valid data creates a user_invite" do
+      assert {:ok, %UserInvite{} = user_invite} = Accounts.create_user_invite()
+      assert user_invite.external_id != nil
+      assert user_invite.used == false
     end
 
     test "update_user_invite/2 with valid data updates the user_invite" do
       user_invite = user_invite_fixture()
       update_attrs = %{external_id: "7488a646-e31f-11e4-aace-600308960668", used: false}
 
-      assert {:ok, %UserInvite{} = user_invite} = Accounts.update_user_invite(user_invite, update_attrs)
+      assert {:ok, %UserInvite{} = user_invite} =
+               Accounts.update_user_invite(user_invite, update_attrs)
+
       assert user_invite.external_id == "7488a646-e31f-11e4-aace-600308960668"
       assert user_invite.used == false
     end
 
     test "update_user_invite/2 with invalid data returns error changeset" do
       user_invite = user_invite_fixture()
-      assert {:error, %Ecto.Changeset{}} = Accounts.update_user_invite(user_invite, @invalid_attrs)
+
+      assert {:error, %Ecto.Changeset{}} =
+               Accounts.update_user_invite(user_invite, @invalid_attrs)
+
       assert user_invite == Accounts.get_user_invite!(user_invite.id)
     end
 
