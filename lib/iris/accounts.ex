@@ -355,4 +355,43 @@ defmodule Iris.Accounts do
   def change_user_invite(%UserInvite{} = user_invite, attrs \\ %{}) do
     UserInvite.changeset(user_invite, attrs)
   end
+
+  @doc """
+  Creates a user, but only if there is a valid invites
+
+  This happens inside a transaction so it is all atomic
+
+  ## Examples
+
+      iex> create_user(%{field: value}, %UserInvite{used: false})
+      {:ok, %User{}}
+
+      iex> create_user(%{field: bad_value}, %UserInvite{used: true})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def create_user_from_invite(attrs \\ %{}, %UserInvite{} = invite) do
+    Repo.transaction(fn ->
+      # Rollback if invite is invalid
+      if not user_invite_valid?(invite) do
+        Repo.rollback(:invalid_invite)
+      end
+
+      # Create user
+      user =
+        case create_user(attrs) do
+          {:ok, user} -> user
+          {:error, error} -> Repo.rollback(error)
+        end
+
+      # Invalidate user invite
+      invalid_invite =
+        case update_user_invite(invite, %{used: true}) do
+          {:ok, updated_invite} -> updated_invite
+          {:error, error} -> Repo.rollback(error)
+        end
+
+      {user, invalid_invite}
+    end)
+  end
 end

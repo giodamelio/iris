@@ -149,7 +149,7 @@ defmodule Iris.AccountsTest do
                nil
     end
 
-    test "validate_user_invite/1 validates unused invite" do
+    test "user_invite_valid?/1 validates unused invite" do
       user_invite = user_invite_fixture()
       assert Accounts.user_invite_valid?(user_invite) == true
     end
@@ -194,6 +194,39 @@ defmodule Iris.AccountsTest do
     test "change_user_invite/1 returns a user_invite changeset" do
       user_invite = user_invite_fixture()
       assert %Ecto.Changeset{} = Accounts.change_user_invite(user_invite)
+    end
+  end
+
+  describe "cross resource functions" do
+    alias Iris.Accounts.User
+    alias Iris.Accounts.UserInvite
+
+    import Iris.AccountsFixtures
+
+    @valid_user_attrs %{email: "some email", full_name: "some full_name"}
+
+    test "create_user_from_invite/2 fails on an invalid invite" do
+      invalid_invite = invalid_user_invite_fixture()
+
+      assert Accounts.create_user_from_invite(@valid_user_attrs, invalid_invite) ==
+               {:error, :invalid_invite}
+    end
+
+    test "create_user_from_invite/2 creates user and invalidates invite" do
+      invite = user_invite_fixture()
+
+      {:ok, {user, invite}} = Accounts.create_user_from_invite(@valid_user_attrs, invite)
+
+      assert user.email == @valid_user_attrs.email
+      assert user.full_name == @valid_user_attrs.full_name
+      assert not Accounts.user_invite_valid?(invite)
+    end
+
+    test "create_user_from_invite/2 doesn't invalidate invite on invalid user attrs" do
+      invite = user_invite_fixture()
+
+      assert {:error, %Ecto.Changeset{}} = Accounts.create_user_from_invite(%{}, invite)
+      assert Accounts.user_invite_valid?(invite)
     end
   end
 end
