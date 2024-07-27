@@ -2,9 +2,8 @@ defmodule IrisWeb.AdminController do
   use IrisWeb, :controller
 
   alias Iris.Accounts
-  alias Iris.Accounts.Invite
 
   def index(conn, _params) do
-    render(conn, :index)
+    render(conn, :index, users_count: Accounts.count_users())
   end
 end

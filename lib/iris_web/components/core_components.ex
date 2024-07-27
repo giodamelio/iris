@@ -393,6 +393,24 @@ defmodule IrisWeb.CoreComponents do
   end
 
   @doc """
+  Renders a section with title and optional subtitle.
+  """
+  attr :title, :string, required: true
+  attr :subtitle, :string, default: nil
+
+  slot :inner_block, required: true
+
+  def section(assigns) do
+    ~H"""
+    <section class="section">
+      <h1 class="title"><%= @title %></h1>
+      <h2 :if={@subtitle != nil} class="subtitle"><%= @subtitle %></h2>
+      <%= render_slot(@inner_block) %>
+    </section>
+    """
+  end
+
+  @doc """
   Renders a header with title.
   """
   attr :class, :string, default: nil
