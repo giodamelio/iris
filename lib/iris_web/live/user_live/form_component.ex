@@ -9,7 +9,6 @@ defmodule IrisWeb.UserLive.FormComponent do
     <div>
       <.header>
         <%= @title %>
-        <:subtitle>Use this form to manage user records in your database.</:subtitle>
       </.header>
 
       <.simple_form
@@ -54,10 +53,16 @@ defmodule IrisWeb.UserLive.FormComponent do
       {:ok, user} ->
         notify_parent({:saved, user})
 
-        {:noreply,
-         socket
-         |> put_flash(:info, "User updated successfully")
-         |> push_patch(to: socket.assigns.patch)}
+        socket = put_flash(socket, :info, "User updated successfully")
+
+        socket =
+          if Map.has_key?(socket.assigns, :patch) do
+            push_patch(socket, to: socket.assigns.patch)
+          else
+            socket
+          end
+
+        {:noreply, socket}
 
       {:error, %Ecto.Changeset{} = changeset} ->
         {:noreply, assign(socket, form: to_form(changeset))}
@@ -69,10 +74,16 @@ defmodule IrisWeb.UserLive.FormComponent do
       {:ok, user} ->
         notify_parent({:saved, user})
 
-        {:noreply,
-         socket
-         |> put_flash(:info, "User created successfully")
-         |> push_patch(to: socket.assigns.patch)}
+        socket = put_flash(socket, :info, "User created successfully")
+
+        socket =
+          if Map.has_key?(socket.assigns, :patch) do
+            push_patch(socket, to: socket.assigns.patch)
+          else
+            socket
+          end
+
+        {:noreply, socket}
 
       {:error, %Ecto.Changeset{} = changeset} ->
         {:noreply, assign(socket, form: to_form(changeset))}
