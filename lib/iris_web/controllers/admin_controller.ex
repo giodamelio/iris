@@ -4,7 +4,10 @@ defmodule IrisWeb.AdminController do
   alias Iris.Accounts
 
   def index(conn, _params) do
-    render(conn, :index, users_count: Accounts.count_users())
+    render(conn, :index,
+      users_count: Accounts.count_users(),
+      user_invites_count: Accounts.count_user_invites()
+    )
   end
 
   def create_user_invite(conn, _params) do

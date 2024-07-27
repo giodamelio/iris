@@ -243,6 +243,19 @@ defmodule Iris.Accounts do
   end
 
   @doc """
+  Returns the count of user_invites
+
+  ## Examples
+
+      iex> count_user_invites()
+      1
+
+  """
+  def count_user_invites do
+    Repo.aggregate(UserInvite, :count, :id)
+  end
+
+  @doc """
   Gets a single user_invite.
 
   Raises `Ecto.NoResultsError` if the User invite does not exist.
