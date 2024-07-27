@@ -277,6 +277,22 @@ defmodule Iris.Accounts do
   end
 
   @doc """
+  Checks if a user_invite is valid
+
+  ## Examples
+
+      iex> user_invite_valid?(%UserInvite{used: false})
+      true
+
+      iex> user_invite_valid?(%UserInvite{used: true})
+      false
+
+  """
+  def user_invite_valid?(%UserInvite{} = invite) do
+    not Repo.get!(UserInvite, invite.id).used
+  end
+
+  @doc """
   Creates a user_invite.
 
   ## Examples

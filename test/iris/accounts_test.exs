@@ -149,6 +149,16 @@ defmodule Iris.AccountsTest do
                nil
     end
 
+    test "validate_user_invite/1 validates unused invite" do
+      user_invite = user_invite_fixture()
+      assert Accounts.user_invite_valid?(user_invite) == true
+    end
+
+    test "user_invite_valid?/1 validates used invite" do
+      user_invite = invalid_user_invite_fixture()
+      assert Accounts.user_invite_valid?(user_invite) == false
+    end
+
     test "create_user_invite/0 with valid data creates a user_invite" do
       assert {:ok, %UserInvite{} = user_invite} = Accounts.create_user_invite()
       assert user_invite.external_id != nil
