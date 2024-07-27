@@ -53,16 +53,10 @@ defmodule IrisWeb.UserLive.FormComponent do
       {:ok, user} ->
         notify_parent({:saved, user})
 
-        socket = put_flash(socket, :info, "User updated successfully")
-
-        socket =
-          if Map.has_key?(socket.assigns, :patch) do
-            push_patch(socket, to: socket.assigns.patch)
-          else
-            socket
-          end
-
-        {:noreply, socket}
+        {:noreply,
+         socket
+         |> put_flash(:info, "User updated successfully")
+         |> navigate_if_requested()}
 
       {:error, %Ecto.Changeset{} = changeset} ->
         {:noreply, assign(socket, form: to_form(changeset))}
@@ -74,16 +68,10 @@ defmodule IrisWeb.UserLive.FormComponent do
       {:ok, user} ->
         notify_parent({:saved, user})
 
-        socket = put_flash(socket, :info, "User created successfully")
-
-        socket =
-          if Map.has_key?(socket.assigns, :patch) do
-            push_patch(socket, to: socket.assigns.patch)
-          else
-            socket
-          end
-
-        {:noreply, socket}
+        {:noreply,
+         socket
+         |> put_flash(:info, "User created successfully")
+         |> navigate_if_requested()}
 
       {:error, %Ecto.Changeset{} = changeset} ->
         {:noreply, assign(socket, form: to_form(changeset))}
@@ -95,16 +83,10 @@ defmodule IrisWeb.UserLive.FormComponent do
       {:ok, user} ->
         notify_parent({:saved, user})
 
-        socket = put_flash(socket, :info, "User created successfully")
-
-        socket =
-          if Map.has_key?(socket.assigns, :patch) do
-            push_patch(socket, to: socket.assigns.patch)
-          else
-            socket
-          end
-
-        {:noreply, socket}
+        {:noreply,
+         socket
+         |> put_flash(:info, "User created successfully")
+         |> navigate_if_requested()}
 
       {:error, %Ecto.Changeset{} = changeset} ->
         {:noreply, assign(socket, form: to_form(changeset))}
@@ -112,4 +94,12 @@ defmodule IrisWeb.UserLive.FormComponent do
   end
 
   defp notify_parent(msg), do: send(self(), {__MODULE__, msg})
+
+  defp navigate_if_requested(socket) do
+    if Map.has_key?(socket.assigns, :patch) do
+      push_patch(socket, to: socket.assigns.patch)
+    else
+      socket
+    end
+  end
 end
