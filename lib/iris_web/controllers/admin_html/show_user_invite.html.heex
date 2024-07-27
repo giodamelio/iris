@@ -1,3 +1,4 @@
 <.section title="User Invite Generate" subtitle="Here is the single use user invite link">
-  <pre><%= url(~p"/invite/user/#{@user_invite.external_id}") %></pre>
+  <p><a href={generate_invite_url(@user_invite)}>Invite</a></p>
+  <pre><%= generate_invite_url(@user_invite) %></pre>
 </.section>
