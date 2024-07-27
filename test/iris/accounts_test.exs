@@ -139,7 +139,7 @@ defmodule Iris.AccountsTest do
       assert Accounts.get_user_invite!(user_invite.id) == user_invite
     end
 
-    test "get_user_invite_by_external_id!/1 returns the user_invite with given external id" do
+    test "get_user_invite_by_external_id/1 returns the user_invite with given external id" do
       user_invite = user_invite_fixture()
       assert Accounts.get_user_invite_by_external_id(user_invite.external_id) == user_invite
     end
