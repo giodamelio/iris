@@ -16,7 +16,10 @@
     default_stages = ["pre-commit" "pre-push"];
     hooks = {
       mix-format.enable = true;
-      mix-test.enable = true;
+      mix-test = {
+        enable = true;
+        excludes = ["mix.exs"];
+      };
       credo = {
         enable = true;
         settings.strict = true;

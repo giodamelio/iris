@@ -16,8 +16,9 @@ defmodule IrisWeb.CoreComponents do
   """
   use Phoenix.Component
 
-  alias Phoenix.LiveView.JS
   import IrisWeb.Gettext
+
+  alias Phoenix.LiveView.JS
 
   @doc """
   Renders a modal.
@@ -281,6 +282,7 @@ defmodule IrisWeb.CoreComponents do
   def input(%{type: "checkbox"} = assigns) do
     assigns =
       assign_new(assigns, :checked, fn ->
+        # credo:disable-for-next-line Credo.Check.Design.AliasUsage
         Phoenix.HTML.Form.normalize_value("checkbox", assigns[:value])
       end)
 

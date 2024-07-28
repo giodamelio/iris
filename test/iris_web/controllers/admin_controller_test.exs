@@ -1,5 +1,5 @@
 defmodule IrisWeb.AdminControllerTest do
-  use IrisWeb.ConnCase
+  use IrisWeb.ConnCase, async: true
 
   import Iris.AccountsFixtures
 

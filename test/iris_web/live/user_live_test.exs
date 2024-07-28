@@ -1,5 +1,5 @@
 defmodule IrisWeb.UserLiveTest do
-  use IrisWeb.ConnCase
+  use IrisWeb.ConnCase, async: true
 
   import Phoenix.LiveViewTest
   import Iris.AccountsFixtures
@@ -8,7 +8,7 @@ defmodule IrisWeb.UserLiveTest do
   @update_attrs %{email: "some updated email", full_name: "some updated full_name"}
   @invalid_attrs %{email: nil, full_name: nil}
 
-  defp create_user(_) do
+  defp create_user(_context) do
     user = user_fixture()
     %{user: user}
   end

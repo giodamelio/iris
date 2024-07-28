@@ -4,9 +4,11 @@ defmodule Iris.Accounts do
   """
 
   import Ecto.Query, warn: false
-  alias Iris.Repo
 
   alias Iris.Accounts.Invite
+  alias Iris.Accounts.User
+  alias Iris.Accounts.UserInvite
+  alias Iris.Repo
 
   @doc """
   Returns the list of invites.
@@ -118,8 +120,6 @@ defmodule Iris.Accounts do
     Invite.changeset(invite, attrs)
   end
 
-  alias Iris.Accounts.User
-
   @doc """
   Returns the list of users.
 
@@ -227,8 +227,6 @@ defmodule Iris.Accounts do
     User.changeset(user, attrs)
   end
 
-  alias Iris.Accounts.UserInvite
-
   @doc """
   Returns the list of user_invites.
 
@@ -306,7 +304,8 @@ defmodule Iris.Accounts do
 
   """
   def get_user_invite_by_external_id(id) do
-    Repo.one(from ui in UserInvite, where: ui.external_id == ^id)
+    query = from ui in UserInvite, where: ui.external_id == ^id
+    Repo.one(query)
   end
 
   @doc """
@@ -338,8 +337,7 @@ defmodule Iris.Accounts do
 
   """
   def create_user_invite do
-    %UserInvite{external_id: Ecto.UUID.generate(), used: false}
-    |> Repo.insert()
+    Repo.insert(%UserInvite{external_id: Ecto.UUID.generate(), used: false})
   end
 
   @doc """

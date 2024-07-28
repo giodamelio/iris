@@ -34,7 +34,7 @@ defmodule Iris.AccountsFixtures do
   @doc """
   Generate a user_invite.
   """
-  def user_invite_fixture() do
+  def user_invite_fixture do
     {:ok, user_invite} = Iris.Accounts.create_user_invite()
 
     user_invite
@@ -43,7 +43,7 @@ defmodule Iris.AccountsFixtures do
   @doc """
   Generate an invalid user_invite.
   """
-  def invalid_user_invite_fixture() do
+  def invalid_user_invite_fixture do
     {:ok, user_invite} = Iris.Accounts.create_user_invite()
     {:ok, used_user_invite} = Iris.Accounts.update_user_invite(user_invite, %{used: true})
 

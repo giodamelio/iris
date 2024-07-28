@@ -1,3 +1,4 @@
+# credo:disable-for-this-file Credo.Check.Refactor.ModuleDependencies
 defmodule IrisWeb.Router do
   use IrisWeb, :router
 

@@ -1,5 +1,5 @@
 defmodule IrisWeb.PageControllerTest do
-  use IrisWeb.ConnCase
+  use IrisWeb.ConnCase, async: true
 
   test "GET /", %{conn: conn} do
     conn = get(conn, ~p"/")

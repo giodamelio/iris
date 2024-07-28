@@ -31,16 +31,12 @@ defmodule IrisWeb.InviteUserLive do
   @impl true
   def mount(%{"id" => external_id} = _params, _session, socket) do
     invite = Accounts.get_user_invite_by_external_id(external_id)
-
-    socket =
-      socket
-      |> assign(:invite, invite)
-
+    socket = assign(socket, :invite, invite)
     {:ok, socket}
   end
 
   @impl true
   def handle_info({IrisWeb.UserLive.FormComponent, {:saved, _user}}, socket) do
-    {:noreply, socket |> push_navigate(to: "/")}
+    {:noreply, push_navigate(socket, to: "/")}
   end
 end

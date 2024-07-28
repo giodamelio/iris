@@ -1,9 +1,9 @@
 defmodule Iris.AccountsTest do
-  use Iris.DataCase
-
-  alias Iris.Accounts
+  use Iris.DataCase, async: true
 
   import Iris.AccountsFixtures
+
+  alias Iris.Accounts
 
   describe "invites" do
     alias Iris.Accounts.Invite

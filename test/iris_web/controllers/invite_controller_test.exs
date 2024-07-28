@@ -1,5 +1,5 @@
 defmodule IrisWeb.InviteControllerTest do
-  use IrisWeb.ConnCase
+  use IrisWeb.ConnCase, async: true
 
   import Iris.AccountsFixtures
 
@@ -77,7 +77,7 @@ defmodule IrisWeb.InviteControllerTest do
     end
   end
 
-  defp create_invite(_) do
+  defp create_invite(_context) do
     invite = invite_fixture()
     %{invite: invite}
   end
