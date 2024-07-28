@@ -6,11 +6,19 @@
 </.section>
 
 <.section title="User Invites" subtitle="Generated Links that allow User creation">
-  <ul>
-    <li>
-      <%= @user_invites_valid_count + @user_invites_invalid_count %> user invites. <%= @user_invites_valid_count %> are still valid and <%= @user_invites_invalid_count %> have been used.
-    </li>
-  </ul>
+  <div class="content">
+    <ul>
+      <li>
+        <%= @user_invites_valid_count + @user_invites_invalid_count %> total user invites
+      </li>
+      <li>
+        <%= @user_invites_valid_count %> valid invites
+      </li>
+      <li>
+        <%= @user_invites_invalid_count %> used invites
+      </li>
+    </ul>
+  </div>
   <.form for={} method="post" action={~p"/admin/user_invites"}>
     <.button class="is-link">Create Invite</.button>
   </.form>
