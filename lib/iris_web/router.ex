@@ -31,8 +31,6 @@ defmodule IrisWeb.Router do
     get "/user_invites/:id", AdminController, :show_user_invite
     post "/user_invites/invalidate_all", AdminController, :invalidate_all_user_invites
 
-    resources "/invites", InviteController
-
     # Users routes
     live "/users", UserLive.Index, :index
     live "/users/new", UserLive.Index, :new
