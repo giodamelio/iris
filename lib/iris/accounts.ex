@@ -272,7 +272,7 @@ defmodule Iris.Accounts do
 
     query
     |> Repo.all()
-    |> Enum.reduce(&Map.merge/2)
+    |> Enum.reduce(%{false: 0, true: 0}, &Map.merge(&2, &1))
   end
 
   @doc """

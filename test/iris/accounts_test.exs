@@ -142,6 +142,10 @@ defmodule Iris.AccountsTest do
       assert Accounts.count_user_invites() == 2
     end
 
+    test "count_user_invites_by_valid/0 with no invites" do
+      assert Accounts.count_user_invites_by_valid() == %{false: 0, true: 0}
+    end
+
     test "count_user_invites_by_valid/0 counts properly" do
       user_invite_fixture()
       invalid_user_invite_fixture()
