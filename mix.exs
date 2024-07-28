@@ -61,6 +61,9 @@ defmodule Iris.MixProject do
       {:bandit, "~> 1.5"},
       {:wax_, "~> 0.6.5"},
       {:ecto_sqlite3_extras, "~> 1.2.0"},
+
+      # Static code checks
+      {:credo, "~> 1.7", only: [:dev, :test], runtime: false}
     ]
   end
 

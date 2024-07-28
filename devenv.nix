@@ -11,4 +11,13 @@
     export HEX_HOME="$DEVENV_ROOT/.hex";
     export MIX_HOME="$DEVENV_ROOT/.mix";
   '';
+
+  pre-commit = {
+    default_stages = ["pre-commit" "pre-push"];
+    hooks = {
+      mix-format.enable = true;
+      mix-test.enable = true;
+      credo.enable = true;
+    };
+  };
 }
