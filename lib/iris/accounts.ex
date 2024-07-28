@@ -256,6 +256,26 @@ defmodule Iris.Accounts do
   end
 
   @doc """
+  Returns the count of user_invites split up by used or not
+
+  ## Examples
+
+      iex> count_user_invites_by_valid()
+      %{false: 1, true: 10}
+
+  """
+  def count_user_invites_by_valid do
+    query =
+      from ui in UserInvite,
+        group_by: ui.used,
+        select: %{ui.used => count(ui.id)}
+
+    query
+    |> Repo.all()
+    |> Enum.reduce(&Map.merge/2)
+  end
+
+  @doc """
   Gets a single user_invite.
 
   Raises `Ecto.NoResultsError` if the User invite does not exist.

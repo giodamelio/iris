@@ -134,6 +134,21 @@ defmodule Iris.AccountsTest do
       assert Accounts.list_user_invites() == [user_invite]
     end
 
+    test "count_user_invites/0 counts properly" do
+      user_invite_fixture()
+      assert Accounts.count_user_invites() == 1
+
+      user_invite_fixture()
+      assert Accounts.count_user_invites() == 2
+    end
+
+    test "count_user_invites_by_valid/0 counts properly" do
+      user_invite_fixture()
+      invalid_user_invite_fixture()
+      invalid_user_invite_fixture()
+      assert Accounts.count_user_invites_by_valid() == %{false: 1, true: 2}
+    end
+
     test "get_user_invite!/1 returns the user_invite with given id" do
       user_invite = user_invite_fixture()
       assert Accounts.get_user_invite!(user_invite.id) == user_invite
