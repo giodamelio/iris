@@ -1,4 +1,6 @@
 defmodule Iris.Accounts.UserInvite do
+  @moduledoc false
+
   use Ecto.Schema
   import Ecto.Changeset
 

@@ -1,4 +1,6 @@
 defmodule Iris.AccountsFixtures do
+  @moduledoc false
+
   @doc """
   Generate a invite.
   """
