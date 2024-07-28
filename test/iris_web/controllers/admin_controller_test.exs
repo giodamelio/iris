@@ -21,9 +21,9 @@ defmodule IrisWeb.AdminControllerTest do
     test "get the count of user invites with no invites", %{conn: conn} do
       conn = get(conn, ~p"/admin")
       response = html_response(conn, 200)
-      assert response =~ "0 user invites"
-      assert response =~ "0 are still valid"
-      assert response =~ "0 have been used"
+      assert response =~ "0 total user invites"
+      assert response =~ "0 valid invites"
+      assert response =~ "0 used invites"
     end
 
     test "get the count of user invites with a mix of used and unused", %{conn: conn} do
@@ -36,9 +36,9 @@ defmodule IrisWeb.AdminControllerTest do
 
       conn = get(conn, ~p"/admin")
       response = html_response(conn, 200)
-      assert response =~ "6 user invites"
-      assert response =~ "2 are still valid"
-      assert response =~ "4 have been used"
+      assert response =~ "6 total user invites"
+      assert response =~ "2 valid invites"
+      assert response =~ "4 used invites"
     end
 
     test "generate user invite", %{conn: conn} do
