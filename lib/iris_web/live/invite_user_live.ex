@@ -40,9 +40,7 @@ defmodule IrisWeb.InviteUserLive do
   end
 
   @impl true
-  def handle_info({IrisWeb.UserLive.FormComponent, {:saved, user}}, socket) do
-    IO.inspect("User created")
-    IO.inspect(user)
-    {:noreply, socket}
+  def handle_info({IrisWeb.UserLive.FormComponent, {:saved, _user}}, socket) do
+    {:noreply, socket |> push_navigate(to: "/")}
   end
 end
