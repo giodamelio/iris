@@ -397,12 +397,13 @@ defmodule IrisWeb.CoreComponents do
   """
   attr :title, :string, required: true
   attr :subtitle, :string, default: nil
+  attr :class, :string, default: nil
 
   slot :inner_block, required: true
 
   def section(assigns) do
     ~H"""
-    <section class="section">
+    <section class={["section", @class]}>
       <h1 class="title"><%= @title %></h1>
       <h2 :if={@subtitle != nil} class="subtitle"><%= @subtitle %></h2>
       <%= render_slot(@inner_block) %>
