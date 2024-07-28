@@ -17,7 +17,10 @@
     hooks = {
       mix-format.enable = true;
       mix-test.enable = true;
-      credo.enable = true;
+      credo = {
+        enable = true;
+        settings.strict = true;
+      };
     };
   };
 }
