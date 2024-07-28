@@ -8,11 +8,7 @@
 <.section title="User Invites" subtitle="Generated Links that allow User creation">
   <ul>
     <li>
-      <%= @user_invites_count[false] + @user_invites_count[true] %> user invites. <%= @user_invites_count[
-        true
-      ] %> are still valid and <%= @user_invites_count[
-        false
-      ] %> have been used.
+      <%= @user_invites_valid_count + @user_invites_invalid_count %> user invites. <%= @user_invites_valid_count %> are still valid and <%= @user_invites_invalid_count %> have been used.
     </li>
   </ul>
   <.form for={} method="post" action={~p"/admin/user_invites"}>

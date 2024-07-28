@@ -4,9 +4,12 @@ defmodule IrisWeb.AdminController do
   alias Iris.Accounts
 
   def index(conn, _params) do
+    user_invites_by_valid = Accounts.count_user_invites_by_valid()
+
     render(conn, :index,
       users_count: Accounts.count_users(),
-      user_invites_count: Accounts.count_user_invites_by_valid()
+      user_invites_valid_count: Map.get(user_invites_by_valid, false, 0),
+      user_invites_invalid_count: Map.get(user_invites_by_valid, true, 0)
     )
   end
 

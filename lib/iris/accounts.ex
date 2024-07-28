@@ -337,7 +337,7 @@ defmodule Iris.Accounts do
       {:error, %Ecto.Changeset{}}
 
   """
-  def create_user_invite() do
+  def create_user_invite do
     %UserInvite{external_id: Ecto.UUID.generate(), used: false}
     |> Repo.insert()
   end
