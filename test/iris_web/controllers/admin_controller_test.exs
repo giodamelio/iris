@@ -40,5 +40,18 @@ defmodule IrisWeb.AdminControllerTest do
       assert response =~ "2 are still valid"
       assert response =~ "4 have been used"
     end
+
+    test "generate user invite", %{conn: conn} do
+      conn = post(conn, ~p"/admin/user_invites")
+      assert redirected_to(conn) == ~p"/admin/user_invites/1"
+    end
+  end
+
+  describe "show_user_invite" do
+    test "display a user invite", %{conn: conn} do
+      user_invite = user_invite_fixture()
+      conn = get(conn, ~p"/admin/user_invites/#{user_invite.id}")
+      assert html_response(conn, 200) =~ "/invite/user/#{user_invite.external_id}"
+    end
   end
 end
