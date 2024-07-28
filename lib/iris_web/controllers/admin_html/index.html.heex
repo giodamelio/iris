@@ -19,7 +19,12 @@
       </li>
     </ul>
   </div>
-  <.form for={} method="post" action={~p"/admin/user_invites"}>
-    <.button class="is-link">Create Invite</.button>
-  </.form>
+  <div>
+    <.form for={} method="post" action={~p"/admin/user_invites"}>
+      <.button class="is-link">Create Invite</.button>
+    </.form>
+    <.form for={} method="post" action={~p"/admin/user_invites/invalidate_all"}>
+      <.button class="is-link">Invalidate All</.button>
+    </.form>
+  </div>
 </.section>

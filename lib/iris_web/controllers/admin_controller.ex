@@ -22,4 +22,9 @@ defmodule IrisWeb.AdminController do
     user_invite = Accounts.get_user_invite!(params["id"])
     render(conn, :show_user_invite, user_invite: user_invite)
   end
+
+  def invalidate_all_user_invites(conn, _params) do
+    :ok = Accounts.invalidate_all_user_invites()
+    redirect(conn, to: ~p"/admin")
+  end
 end
