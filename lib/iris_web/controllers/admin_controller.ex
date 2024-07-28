@@ -6,7 +6,7 @@ defmodule IrisWeb.AdminController do
   def index(conn, _params) do
     render(conn, :index,
       users_count: Accounts.count_users(),
-      user_invites_count: Accounts.count_user_invites()
+      user_invites_count: Accounts.count_user_invites_by_valid()
     )
   end
 
