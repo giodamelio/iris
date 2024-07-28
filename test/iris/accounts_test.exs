@@ -204,6 +204,19 @@ defmodule Iris.AccountsTest do
       assert user_invite == Accounts.get_user_invite!(user_invite.id)
     end
 
+    test "invalidate_all_user_invites/0 invalidates all invites" do
+      user_invite_fixture()
+      user_invite_fixture()
+      invalid_user_invite_fixture()
+      invalid_user_invite_fixture()
+
+      assert Accounts.count_user_invites_by_valid() == %{false: 2, true: 2}
+
+      assert :ok == Accounts.invalidate_all_user_invites()
+
+      assert Accounts.count_user_invites_by_valid() == %{false: 0, true: 4}
+    end
+
     test "delete_user_invite/1 deletes the user_invite" do
       user_invite = user_invite_fixture()
       assert {:ok, %UserInvite{}} = Accounts.delete_user_invite(user_invite)

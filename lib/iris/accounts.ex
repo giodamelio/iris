@@ -359,6 +359,20 @@ defmodule Iris.Accounts do
   end
 
   @doc """
+  Invalidates all user invites
+
+  ## Examples
+
+      iex> invalidate_all_user_invites()
+      :ok
+
+  """
+  def invalidate_all_user_invites do
+    Repo.update_all(UserInvite, set: [used: true])
+    :ok
+  end
+
+  @doc """
   Deletes a user_invite.
 
   ## Examples
