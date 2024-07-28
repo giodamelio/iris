@@ -3,6 +3,7 @@
 
   packages = with pkgs; [
     inotify-tools
+    emmet-ls
   ];
 
   env.ELIXIRLS_CMD = "${pkgs.elixir-ls}/lib/language_server.sh";
