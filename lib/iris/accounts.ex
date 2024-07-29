@@ -5,6 +5,7 @@ defmodule Iris.Accounts do
 
   import Ecto.Query, warn: false
 
+  alias Iris.Accounts.PasskeyInvite
   alias Iris.Accounts.User
   alias Iris.Accounts.UserInvite
   alias Iris.Repo
@@ -327,5 +328,99 @@ defmodule Iris.Accounts do
 
       {user, invalid_invite}
     end)
+  end
+
+  @doc """
+  Returns the list of passkey_invites.
+
+  ## Examples
+
+      iex> list_passkey_invites()
+      [%PasskeyInvite{}, ...]
+
+  """
+  def list_passkey_invites do
+    Repo.all(PasskeyInvite)
+  end
+
+  @doc """
+  Gets a single passkey_invite.
+
+  Raises `Ecto.NoResultsError` if the Passkey invite does not exist.
+
+  ## Examples
+
+      iex> get_passkey_invite!(123)
+      %PasskeyInvite{}
+
+      iex> get_passkey_invite!(456)
+      ** (Ecto.NoResultsError)
+
+  """
+  def get_passkey_invite!(id), do: Repo.get!(PasskeyInvite, id)
+
+  @doc """
+  Creates a passkey_invite.
+
+  ## Examples
+
+      iex> create_passkey_invite(%{field: value})
+      {:ok, %PasskeyInvite{}}
+
+      iex> create_passkey_invite(%{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def create_passkey_invite(attrs \\ %{}) do
+    %PasskeyInvite{}
+    |> PasskeyInvite.changeset(attrs)
+    |> Repo.insert()
+  end
+
+  @doc """
+  Updates a passkey_invite.
+
+  ## Examples
+
+      iex> update_passkey_invite(passkey_invite, %{field: new_value})
+      {:ok, %PasskeyInvite{}}
+
+      iex> update_passkey_invite(passkey_invite, %{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def update_passkey_invite(%PasskeyInvite{} = passkey_invite, attrs) do
+    passkey_invite
+    |> PasskeyInvite.changeset(attrs)
+    |> Repo.update()
+  end
+
+  @doc """
+  Deletes a passkey_invite.
+
+  ## Examples
+
+      iex> delete_passkey_invite(passkey_invite)
+      {:ok, %PasskeyInvite{}}
+
+      iex> delete_passkey_invite(passkey_invite)
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def delete_passkey_invite(%PasskeyInvite{} = passkey_invite) do
+    Repo.delete(passkey_invite)
+  end
+
+  @doc """
+  Returns an `%Ecto.Changeset{}` for tracking passkey_invite changes.
+
+  ## Examples
+
+      iex> change_passkey_invite(passkey_invite)
+      %Ecto.Changeset{data: %PasskeyInvite{}}
+
+  """
+  def change_passkey_invite(%PasskeyInvite{} = passkey_invite, attrs \\ %{}) do
+    PasskeyInvite.changeset(passkey_invite, attrs)
   end
 end

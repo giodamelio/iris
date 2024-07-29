@@ -200,4 +200,67 @@ defmodule Iris.AccountsTest do
       assert Accounts.user_invite_valid?(invite)
     end
   end
+
+  describe "passkey_invites" do
+    alias Iris.Accounts.PasskeyInvite
+
+    import Iris.AccountsFixtures
+
+    @invalid_attrs %{external_id: nil, used: nil}
+
+    test "list_passkey_invites/0 returns all passkey_invites" do
+      passkey_invite = passkey_invite_fixture()
+      assert Accounts.list_passkey_invites() == [passkey_invite]
+    end
+
+    test "get_passkey_invite!/1 returns the passkey_invite with given id" do
+      passkey_invite = passkey_invite_fixture()
+      assert Accounts.get_passkey_invite!(passkey_invite.id) == passkey_invite
+    end
+
+    test "create_passkey_invite/1 with valid data creates a passkey_invite" do
+      valid_attrs = %{external_id: "7488a646-e31f-11e4-aace-600308960662", used: true}
+
+      assert {:ok, %PasskeyInvite{} = passkey_invite} =
+               Accounts.create_passkey_invite(valid_attrs)
+
+      assert passkey_invite.external_id == "7488a646-e31f-11e4-aace-600308960662"
+      assert passkey_invite.used == true
+    end
+
+    test "create_passkey_invite/1 with invalid data returns error changeset" do
+      assert {:error, %Ecto.Changeset{}} = Accounts.create_passkey_invite(@invalid_attrs)
+    end
+
+    test "update_passkey_invite/2 with valid data updates the passkey_invite" do
+      passkey_invite = passkey_invite_fixture()
+      update_attrs = %{external_id: "7488a646-e31f-11e4-aace-600308960668", used: false}
+
+      assert {:ok, %PasskeyInvite{} = passkey_invite} =
+               Accounts.update_passkey_invite(passkey_invite, update_attrs)
+
+      assert passkey_invite.external_id == "7488a646-e31f-11e4-aace-600308960668"
+      assert passkey_invite.used == false
+    end
+
+    test "update_passkey_invite/2 with invalid data returns error changeset" do
+      passkey_invite = passkey_invite_fixture()
+
+      assert {:error, %Ecto.Changeset{}} =
+               Accounts.update_passkey_invite(passkey_invite, @invalid_attrs)
+
+      assert passkey_invite == Accounts.get_passkey_invite!(passkey_invite.id)
+    end
+
+    test "delete_passkey_invite/1 deletes the passkey_invite" do
+      passkey_invite = passkey_invite_fixture()
+      assert {:ok, %PasskeyInvite{}} = Accounts.delete_passkey_invite(passkey_invite)
+      assert_raise Ecto.NoResultsError, fn -> Accounts.get_passkey_invite!(passkey_invite.id) end
+    end
+
+    test "change_passkey_invite/1 returns a passkey_invite changeset" do
+      passkey_invite = passkey_invite_fixture()
+      assert %Ecto.Changeset{} = Accounts.change_passkey_invite(passkey_invite)
+    end
+  end
 end

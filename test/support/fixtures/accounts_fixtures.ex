@@ -34,4 +34,19 @@ defmodule Iris.AccountsFixtures do
 
     used_user_invite
   end
+
+  @doc """
+  Generate a passkey_invite.
+  """
+  def passkey_invite_fixture(attrs \\ %{}) do
+    {:ok, passkey_invite} =
+      attrs
+      |> Enum.into(%{
+        external_id: "7488a646-e31f-11e4-aace-600308960662",
+        used: true
+      })
+      |> Iris.Accounts.create_passkey_invite()
+
+    passkey_invite
+  end
 end
