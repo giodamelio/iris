@@ -379,6 +379,25 @@ defmodule Iris.Accounts do
   end
 
   @doc """
+  Gets a single passkey_invite by it's external id
+
+  Returns nil if the User invite does not exist.
+
+  ## Examples
+
+      iex> get_passkey_invite_by_external_id("108c8fc3-5f53-45e0-b41c-70fa1c9eff10")
+      %UserInvite{}
+
+      iex> get_passkey_invite_by_external_id("e79d9001-6b9a-437d-9a28-a9861b797689")
+      nil
+
+  """
+  def get_passkey_invite_by_external_id(id) do
+    query = from pi in PasskeyInvite, where: pi.external_id == ^id, preload: :user
+    Repo.one(query)
+  end
+
+  @doc """
   Creates a passkey_invite.
 
   ## Examples

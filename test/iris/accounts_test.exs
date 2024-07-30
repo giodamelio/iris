@@ -218,6 +218,18 @@ defmodule Iris.AccountsTest do
       assert Accounts.get_passkey_invite!(passkey_invite.id) == passkey_invite
     end
 
+    test "get_passkey_invite_by_external_id/1 returns the user_invite with given external id" do
+      passkey_invite = passkey_invite_fixture()
+
+      assert Accounts.get_passkey_invite_by_external_id(passkey_invite.external_id) ==
+               passkey_invite
+    end
+
+    test "get_passkey_invite_by_external_id/1 returns nil for user that doesn't exist" do
+      assert Accounts.get_passkey_invite_by_external_id("7488a646-e31f-11e4-aace-600308960668") ==
+               nil
+    end
+
     test "create_passkey_invite/1 with valid data creates a passkey_invite" do
       user = user_fixture()
 
