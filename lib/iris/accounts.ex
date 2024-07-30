@@ -340,7 +340,9 @@ defmodule Iris.Accounts do
 
   """
   def list_passkey_invites do
-    Repo.all(PasskeyInvite)
+    PasskeyInvite
+    |> Repo.all()
+    |> Repo.preload(:user)
   end
 
   @doc """
@@ -370,7 +372,11 @@ defmodule Iris.Accounts do
       ** (Ecto.NoResultsError)
 
   """
-  def get_passkey_invite!(id), do: Repo.get!(PasskeyInvite, id)
+  def get_passkey_invite!(id) do
+    PasskeyInvite
+    |> Repo.get!(id)
+    |> Repo.preload(:user)
+  end
 
   @doc """
   Creates a passkey_invite.

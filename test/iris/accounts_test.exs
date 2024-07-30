@@ -219,7 +219,13 @@ defmodule Iris.AccountsTest do
     end
 
     test "create_passkey_invite/1 with valid data creates a passkey_invite" do
-      valid_attrs = %{external_id: "7488a646-e31f-11e4-aace-600308960662", used: true}
+      user = user_fixture()
+
+      valid_attrs = %{
+        external_id: "7488a646-e31f-11e4-aace-600308960662",
+        used: true,
+        user_id: user.id
+      }
 
       assert {:ok, %PasskeyInvite{} = passkey_invite} =
                Accounts.create_passkey_invite(valid_attrs)

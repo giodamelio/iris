@@ -3,10 +3,13 @@ defmodule Iris.Accounts.User do
 
   use Ecto.Schema
   import Ecto.Changeset
+  alias Iris.Accounts
 
   schema "users" do
     field :email, :string
     field :full_name, :string
+
+    has_many :passkey_invites, Accounts.PasskeyInvite
 
     timestamps(type: :utc_datetime)
   end
