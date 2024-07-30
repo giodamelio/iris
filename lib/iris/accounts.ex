@@ -344,6 +344,19 @@ defmodule Iris.Accounts do
   end
 
   @doc """
+  Returns the count of passkey_invites.
+
+  ## Examples
+
+      iex> count_passkey_invites()
+      1
+
+  """
+  def count_passkey_invites do
+    Repo.aggregate(PasskeyInvite, :count, :id)
+  end
+
+  @doc """
   Gets a single passkey_invite.
 
   Raises `Ecto.NoResultsError` if the Passkey invite does not exist.
