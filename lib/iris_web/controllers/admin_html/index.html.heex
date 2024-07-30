@@ -1,54 +1,38 @@
 <div class="grid">
-  <div class="cell">
-    <div class="card">
-      <header class="card-header">
-        <p class="card-header-title">
-          Users
-        </p>
-      </header>
-      <div class="card-content">
-        <ul>
-          <li>There are <%= @users_count %> users</li>
-        </ul>
-      </div>
-      <footer class="card-footer">
-        <.link class="card-footer-item button" navigate={~p"/admin/users"}>See All</.link>
-      </footer>
-    </div>
-  </div>
-  <div class="cell">
-    <div class="card">
-      <header class="card-header">
-        <p class="card-header-title">
-          User Invites
-        </p>
-      </header>
-      <div class="card-content">
-        <ul>
-          <li>
-            <%= @user_invites_valid_count + @user_invites_invalid_count %> total user invites
-          </li>
-          <li>
-            <%= @user_invites_valid_count %> valid invites
-          </li>
-          <li>
-            <%= @user_invites_invalid_count %> used invites
-          </li>
-        </ul>
-      </div>
-      <footer class="card-footer">
-        <.form for={} method="post" action={~p"/admin/user_invites"} class="card-footer-item">
-          <.button>Create Invite</.button>
-        </.form>
-        <.form
-          for={}
-          method="post"
-          action={~p"/admin/user_invites/invalidate_all"}
-          class="card-footer-item"
-        >
-          <.button>Invalidate All</.button>
-        </.form>
-      </footer>
-    </div>
-  </div>
+  <.grid_card title="Users">
+    <ul>
+      <li>There are <%= @users_count %> users</li>
+    </ul>
+
+    <:actions>
+      <.link class="card-footer-item button" navigate={~p"/admin/users"}>See All</.link>
+    </:actions>
+  </.grid_card>
+  <.grid_card title="User Invites">
+    <ul>
+      <li>
+        <%= @user_invites_valid_count + @user_invites_invalid_count %> total user invites
+      </li>
+      <li>
+        <%= @user_invites_valid_count %> valid invites
+      </li>
+      <li>
+        <%= @user_invites_invalid_count %> used invites
+      </li>
+    </ul>
+
+    <:actions>
+      <.form for={} method="post" action={~p"/admin/user_invites"} class="card-footer-item">
+        <.button>Create Invite</.button>
+      </.form>
+      <.form
+        for={}
+        method="post"
+        action={~p"/admin/user_invites/invalidate_all"}
+        class="card-footer-item"
+      >
+        <.button>Invalidate All</.button>
+      </.form>
+    </:actions>
+  </.grid_card>
 </div>

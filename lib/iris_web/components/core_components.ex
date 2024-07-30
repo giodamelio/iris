@@ -414,6 +414,34 @@ defmodule IrisWeb.CoreComponents do
   end
 
   @doc """
+  Renders a grid card for use in dashboards
+  """
+  attr :title, :string, required: true
+
+  slot :inner_block, required: true
+  slot :actions
+
+  def grid_card(assigns) do
+    ~H"""
+    <div class="cell">
+      <div class="card">
+        <header class="card-header">
+          <p class="card-header-title">
+            <%= @title %>
+          </p>
+        </header>
+        <div class="card-content">
+          <%= render_slot(@inner_block) %>
+        </div>
+        <footer :if={@actions} class="card-footer">
+          <%= render_slot(@actions) %>
+        </footer>
+      </div>
+    </div>
+    """
+  end
+
+  @doc """
   Renders a header with title.
   """
   attr :class, :string, default: nil
