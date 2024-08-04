@@ -1,5 +1,5 @@
 defmodule IrisWeb.UserLiveTest do
-  use IrisWeb.ConnCase, async: true
+  use IrisWeb.ConnCase, async: false
 
   import Phoenix.LiveViewTest
   import Iris.AccountsFixtures

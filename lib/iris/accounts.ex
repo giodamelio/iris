@@ -410,7 +410,7 @@ defmodule Iris.Accounts do
 
   """
   def create_passkey_invite(attrs \\ %{}) do
-    %PasskeyInvite{}
+    %PasskeyInvite{external_id: Ecto.UUID.generate(), used: false}
     |> PasskeyInvite.changeset(attrs)
     |> Repo.insert()
   end

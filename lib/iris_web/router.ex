@@ -20,6 +20,7 @@ defmodule IrisWeb.Router do
 
     get "/", PageController, :home
     live "/invite/user/:id", InviteUserLive
+    live "/invite/passkey/:id", InvitePasskeyLive
   end
 
   # Admin routes

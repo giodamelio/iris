@@ -16,9 +16,9 @@ defmodule IrisWeb.InviteUserLiveTest do
       invite_live
       |> form("#user-form", user: @create_attrs)
       |> render_submit()
-      |> follow_redirect(conn, ~p"/")
+      |> follow_redirect(conn)
 
     assert Accounts.count_users() == 1
-    assert html_response(conn, 200) =~ "Hello World"
+    assert html_response(conn, 200) =~ "Register Passkey"
   end
 end
